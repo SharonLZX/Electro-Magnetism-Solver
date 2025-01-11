@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'forms.dart';
+import 'constants.dart';
+import 'subscript.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,11 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 192, 62, 153)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Physics Formula Calculator'),
+      home: const MyHomePage(title: 'Electromagnetism Solver'),
     );
   }
 }
@@ -30,156 +35,81 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Map<String, TextEditingController> controllers = {};
+  final Map<String, TextEditingController> controllers = {
+    'numberInput': TextEditingController(),
+    'defaultInput': TextEditingController(),
+    'directionInput': TextEditingController()
+  };
 
-  // Variable to hold the result
+  late final WidgetFactory widgetFactory;
+
   dynamic _result = 0.0;
-
-  // List of formulas
-  final List<String> formulaList = [
-    'Magnetic Flux Integral (ΦB = ∫∫B·dS)',
-    'Induced EMF in a loop (E = - dΦB/dt)',
-  ];
-
-  // Selected formula
   String selectedFormula = 'Magnetic Flux Integral (ΦB = ∫∫B·dS)';
+  SubscriptManager subscriptManager = SubscriptManager();
 
-  @override
-  void initState() {
-    super.initState();
-    final inputs = ['B', 'BD', 'S', 'SD', 'A', 'dFlux', 'dt'];
+  void buildEditor() {
+    // Builds TextEditingController during initState phase.
     for (var input in inputs) {
       controllers[input] = TextEditingController();
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    buildEditor();
+    widgetFactory = WidgetFactory(controllers);
+  }
+
+  @override
   void dispose() {
-    // Dispose all the controllers to release resources
     controllers.forEach((key, controller) {
       controller.dispose();
     });
     super.dispose();
   }
 
-  // Magnetic Flux Integral: ΦB = ∫∫B·dS
-  double magneticFluxIntegral(double B, double S) {
-    return B * S; // Simplified version for uniform B over S
-  }
-
-  // Induced EMF in a loop: E = - dΦB/dt
   double inducedEMFLoop(double dFlux, double dt) {
-    return dt != 0 ? -(dFlux / dt) : 0.0; // Handle division by zero
+    return dt != 0 ? -(dFlux / dt) : 0.0;
   }
 
-  //To limit numbers only
-  Widget buildTextFormFieldNumber(String label, String controllerKey) {
-    return TextFormField(
-        decoration: InputDecoration(labelText: label),
-        controller: controllers[controllerKey],
-        keyboardType: TextInputType.number);
-  }
-
-  //For Numbers, Trigo Functions and Alphabet
-  Widget buildTextFormField(String label, String controllerKey) {
-    return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      controller: controllers[controllerKey],
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(
-            RegExp(r'^[a-zA-Z0-9()+\-*/\s^]*$|^[a-zA-Z]+\(.*\)$'))
-      ],
-    );
-  }
-
-  //To limit a directions variable only
-  Widget buildTextFormFieldDirection(String label, String controllerKey) {
-    return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      controller: controllers[controllerKey],
-      keyboardType: TextInputType.text, // We still allow text input
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^(a|ax|ay|az)$')),
-      ],
-    );
-  }
-
-  //To format super and subscript
-  String formatFormulaWithSubscripts(String formula) {
-    // Replace variables with subscripts (e.g., c1 -> c₁)
-    formula = formula.replaceAllMapped(
-      RegExp(r'([a-zA-Z])(\d+)'), // Match a letter followed by digits
-      (match) => '${match[1]}${_convertToSubscript(match[2]!)}',
-    );
-
-    // Replace superscripts (e.g., ^2 -> ²)
-    formula = formula.replaceAllMapped(
-      RegExp(r'\^(\d)'), // Match ^ followed by a digit
-      (match) => _convertToSuperscript(match[1]!),
-    );
-
-    return formula;
-  }
-
-// Helper function to convert numbers to subscript
-  String _convertToSubscript(String number) {
-    const subscriptDigits = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
-    return number
-        .split('')
-        .map((digit) => subscriptDigits[int.parse(digit)])
-        .join('');
-  }
-
-// Helper function to convert numbers to superscript
-  String _convertToSuperscript(String number) {
-    const superscriptDigits = [
-      '⁰',
-      '¹',
-      '²',
-      '³',
-      '⁴',
-      '⁵',
-      '⁶',
-      '⁷',
-      '⁸',
-      '⁹'
-    ];
-    return number
-        .split('')
-        .map((digit) => superscriptDigits[int.parse(digit)])
-        .join('');
-  }
-
-  /// Helper function for symbolic multiplication
   String multiplySymbolic(String term1, String term2) {
-    if (term1 == "0" || term2 == "0") return "0";
-    if (term1 == "1") return term2;
-    if (term2 == "1") return term1;
+    /// Helper function for symbolic multiplication
+    if (term1.trim() == "0" || term2.trim() == "0") return "0";
+    if (term1.trim() == "1") return term2.trim();
+    if (term2.trim() == "1") return term1.trim();
     return "$term1 * $term2";
   }
 
-  /// Magnetic Flux Integral for symbolic variables
+  // Magnetic Flux Integral for symbolic variables
   String magneticFluxIntegralSymbolic(
-      String B, String S, String bd, String sd) {
-    // Check if BD and SD are the same, dot product is 1, otherwise 0
+      String B, String bd, String sd, String dS, String totalArea) {
+    // Step 1: Write the formula
+    String formula = 'Φm = ∫∫ B · dS';
+
+    // Step 2: Substitute B and dS
+    String step1 = 'Substitution: ∫∫ (($B)($bd)) · (($dS)($sd))';
+
+    // Step 3: Compute the dot product
     String dotProduct = (bd == sd) ? "1" : "0";
-
-    // Formula
-    String formula = 'ΦB = ∫∫B·dS';
-
-    // Substitution step showing the symbolic substitution
-    String substitutionStep = 'Substitution: ∫∫(($B)($bd)) · (($S)($sd))';
-
-    // Handle the dot product more accurately
-    String result;
+    String step2;
     if (dotProduct == "1") {
-      // Simplify the expression when the dot product is 1
-      result = "$B * $S";
+      step2 = 'Step 2: ∫∫ ($B) ($dS)';
     } else {
-      result = "$B · $S = 0";
+      step2 = 'Step 2: 0 (BD and SD are orthogonal)';
+      return '$formula\n$step1\n$step2\nResult: 0';
     }
 
-    return '$formula\n$substitutionStep\nResult: $result';
+    // Step 4: Factor out constants
+    String step3 = 'Step 3: ($B) ∫∫ ($dS)';
+
+    // Step 5: Replace area integral with totalArea
+    String step4 = 'Step 4: ($B) * ($totalArea)';
+
+    // Result
+    String result = 'Result: ($B) * $totalArea';
+
+    return '$formula\n$step1\n$step2\n$step3\n$step4\n$result';
   }
 
   // Perform calculation based on selected formula
@@ -191,12 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
           String S = controllers['S']?.text ?? "0";
           String bd = controllers['BD']?.text ?? "";
           String sd = controllers['SD']?.text ?? "";
+          String dS = controllers['dS']?.text ?? "";
 
           // Use the symbolic flux calculation
-          String rawResult = magneticFluxIntegralSymbolic(B, S, bd, sd);
+          String rawResult = magneticFluxIntegralSymbolic(B, S, bd, sd, dS);
 
           // Format for display with subscripts and superscripts
-          _result = formatFormulaWithSubscripts(rawResult);
+          _result = subscriptManager.subscriptFormatting(rawResult);
           break;
         case 'Induced EMF in a loop (E = - dΦB/dt)':
           double dFlux =
@@ -208,7 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // Function to clear the fields and reset the result
   void clearFields() {
     controllers.forEach((key, controller) {
       controller.clear();
@@ -220,18 +150,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called.
-    // The Flutter framework has been optimized to make rerunning build methods fast, so that you can just rebuild anything that needs updating rather than having to individually change instances of widgets.
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by the App.build method, and use it to set our appbar title.
-        title: const Text('Formular Selector'),
+        title: const Text('Electromagnetism Solver'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        // Center is a layout widget. It takes a single child and positions it in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -240,13 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onChanged: (String? newValue) {
                 setState(() {
                   selectedFormula = newValue!;
-
-                  // Clear all text fields
                   controllers.forEach((key, controller) {
                     controller.clear();
                   });
-
-                  // Reset the result
                   _result = 0.0;
                 });
               },
@@ -257,36 +178,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }).toList(),
             ),
-
-            const SizedBox(height: 10), //Add some space between fields
-
+            const SizedBox(height: 10),
             if (selectedFormula == 'Magnetic Flux Integral (ΦB = ∫∫B·dS)') ...[
-              buildTextFormField('B (Magnetic Field Strength in Tesla)', 'B'),
-              buildTextFormFieldDirection('Field direction (ax, ay, az)', 'BD'),
-              buildTextFormField('S (Surface Area in m²)', 'S'),
-              buildTextFormFieldDirection(
+              widgetFactory.defaultForm(
+                  'B (Magnetic Field Strength in Tesla)', 'B'),
+              widgetFactory.directionForm('Field direction (ax, ay, az)', 'BD'),
+              widgetFactory.defaultForm('S (Surface Area in m²)', 'S'),
+              widgetFactory.directionForm(
                   'Surface direction (ax, ay, az)', 'SD'),
             ] else if (selectedFormula ==
                 'Induced EMF in a loop (E = - dΦB/dt)') ...[
-              buildTextFormField(
+              widgetFactory.directionForm(
                   'dΦB (Change in Magnetic Flux in Weber)', 'dFlux'),
-              buildTextFormField('dt (Change in Time in seconds)', 'dt'),
+              widgetFactory.directionForm(
+                  'dt (Change in Time in seconds)', 'dt'),
             ],
-
             const SizedBox(height: 20),
-
-            ElevatedButton(
-              onPressed: calculateResult,
-              child: const Text('Calculate'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: calculateResult,
+                  child: const Text('Calculate'),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: clearFields,
+                  child: const Text('Clear'),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: clearFields,
-              child: const Text('Clear'),
-            ),
-
             const SizedBox(height: 20),
-
             Text('Result: ${_result.toString()}'),
           ],
         ),
