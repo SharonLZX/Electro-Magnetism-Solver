@@ -1,18 +1,24 @@
 class SubscriptManager {
-  String subscriptFormatting(String formula) {
+  List<String> subscriptFormatting(List<String> result) {
+    List<String> formattedResult = [];
     // Replace variables with subscripts (e.g., c1 -> c₁)
-    formula = formula.replaceAllMapped(
-      RegExp(r'([a-zA-Z])(\d+)'),
-      (match) => '${match[1]}${convertToSubscript(match[2]!)}',
-    );
 
-    // Replace superscripts (e.g., ^2 -> ²)
-    formula = formula.replaceAllMapped(
-      RegExp(r'\^(\d)'),
-      (match) => convertToSuperscript(match[1]!),
-    );
+    for (String indvStep in result) {
+      indvStep = indvStep.replaceAllMapped(
+        RegExp(r'([a-zA-Z])(\d+)'),
+        (match) => '${match[1]}${convertToSubscript(match[2]!)}',
+      );
 
-    return formula;
+      // Replace superscripts (e.g., ^2 -> ²)
+      indvStep = indvStep.replaceAllMapped(
+        RegExp(r'\^(\d)'),
+        (match) => convertToSuperscript(match[1]!),
+      );
+
+      formattedResult.add(indvStep);
+    }
+
+    return formattedResult;
   }
 
   // Helper function to convert numbers to subscript

@@ -1,3 +1,4 @@
+import 'package:electro_magnetism_solver/plane.dart';
 import 'package:flutter/material.dart';
 
 import 'forms.dart';
@@ -38,14 +39,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final Map<String, TextEditingController> controllers = {
     'numberInput': TextEditingController(),
     'defaultInput': TextEditingController(),
-    'directionInput': TextEditingController()
+    'directionInput': TextEditingController(),
+    'planeInput': TextEditingController()
   };
 
   late final WidgetFactory widgetFactory;
 
-  dynamic _result = 0.0;
+  List<String> _result = [];
   String selectedFormula = 'Magnetic Flux Integral (ΦB = ∫∫B·dS)';
   SubscriptManager subscriptManager = SubscriptManager();
+  PlaneManager planeManager = PlaneManager();
 
   void buildEditor() {
     // Builds TextEditingController during initState phase.
@@ -82,34 +85,21 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // Magnetic Flux Integral for symbolic variables
-  String magneticFluxIntegralSymbolic(
-      String B, String bd, String sd, String dS, String totalArea) {
-    // Step 1: Write the formula
-    String formula = 'Φm = ∫∫ B · dS';
+  List<String> magneticFluxIntegralSymbolic(
+      String B, String bd, String S, String sd, String areaElement) {
+    List<String> resultList = [];
 
-    // Step 2: Substitute B and dS
-    String step1 = 'Substitution: ∫∫ (($B)($bd)) · (($dS)($sd))';
+    resultList.add('Formula: Φm = ∫∫ B · dS');
+    resultList.add('∫∫ (($B)($bd)) · (($areaElement)($sd))');
 
-    // Step 3: Compute the dot product
-    String dotProduct = (bd == sd) ? "1" : "0";
-    String step2;
-    if (dotProduct == "1") {
-      step2 = 'Step 2: ∫∫ ($B) ($dS)';
+    if (bd == sd) {
+      resultList.add('∫∫ ($B) ($areaElement)');
+      resultList.add('($B) ∫∫ ($areaElement)');
+      resultList.add('($B) * ($S)');
     } else {
-      step2 = 'Step 2: 0 (BD and SD are orthogonal)';
-      return '$formula\n$step1\n$step2\nResult: 0';
+      resultList.add('0 (BD and SD are orthogonal)');
     }
-
-    // Step 4: Factor out constants
-    String step3 = 'Step 3: ($B) ∫∫ ($dS)';
-
-    // Step 5: Replace area integral with totalArea
-    String step4 = 'Step 4: ($B) * ($totalArea)';
-
-    // Result
-    String result = 'Result: ($B) * $totalArea';
-
-    return '$formula\n$step1\n$step2\n$step3\n$step4\n$result';
+    return resultList;
   }
 
   // Perform calculation based on selected formula
@@ -117,23 +107,28 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       switch (selectedFormula) {
         case 'Magnetic Flux Integral (ΦB = ∫∫B·dS)':
+          String P = controllers['P']?.text ?? "xy";
           String B = controllers['B']?.text ?? "0";
           String S = controllers['S']?.text ?? "0";
-          String bd = controllers['BD']?.text ?? "";
-          String sd = controllers['SD']?.text ?? "";
-          String dS = controllers['dS']?.text ?? "";
+          String bd = controllers['BD']?.text ?? "az";
+          String sd = controllers['SD']?.text ?? "az";
+
+          // Format plane
+          String areaElement =
+              planeManager.planeSelection(P); //areaElement: e.g. dxdy
 
           // Use the symbolic flux calculation
-          String rawResult = magneticFluxIntegralSymbolic(B, S, bd, sd, dS);
+          List<String> result =
+              magneticFluxIntegralSymbolic(B, bd, S, sd, areaElement);
 
           // Format for display with subscripts and superscripts
-          _result = subscriptManager.subscriptFormatting(rawResult);
+          _result = subscriptManager.subscriptFormatting(result);
           break;
         case 'Induced EMF in a loop (E = - dΦB/dt)':
           double dFlux =
               double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
           double dt = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
-          _result = inducedEMFLoop(dFlux, dt);
+          //_result = inducedEMFLoop(dFlux, dt);
           break;
       }
     });
@@ -144,72 +139,101 @@ class _MyHomePageState extends State<MyHomePage> {
       controller.clear();
     });
     setState(() {
-      _result = 0.0;
+      _result.clear();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Electromagnetism Solver'),
-      ),
+      appBar: null,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DropdownButton<String>(
-              value: selectedFormula,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedFormula = newValue!;
-                  controllers.forEach((key, controller) {
-                    controller.clear();
-                  });
-                  _result = 0.0;
-                });
-              },
-              items: formulaList.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 10),
-            if (selectedFormula == 'Magnetic Flux Integral (ΦB = ∫∫B·dS)') ...[
-              widgetFactory.defaultForm(
-                  'B (Magnetic Field Strength in Tesla)', 'B'),
-              widgetFactory.directionForm('Field direction (ax, ay, az)', 'BD'),
-              widgetFactory.defaultForm('S (Surface Area in m²)', 'S'),
-              widgetFactory.directionForm(
-                  'Surface direction (ax, ay, az)', 'SD'),
-            ] else if (selectedFormula ==
-                'Induced EMF in a loop (E = - dΦB/dt)') ...[
-              widgetFactory.directionForm(
-                  'dΦB (Change in Magnetic Flux in Weber)', 'dFlux'),
-              widgetFactory.directionForm(
-                  'dt (Change in Time in seconds)', 'dt'),
-            ],
-            const SizedBox(height: 20),
-            Row(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: screenWidth - 10,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  onPressed: calculateResult,
-                  child: const Text('Calculate'),
+                DropdownButton<String>(
+                  value: selectedFormula,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedFormula = newValue!;
+                      controllers.forEach((key, controller) {
+                        controller.clear();
+                      });
+                      _result.clear();
+                    });
+                  },
+                  items: formulaList.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: clearFields,
-                  child: const Text('Clear'),
+                if (selectedFormula ==
+                    'Magnetic Flux Integral (ΦB = ∫∫B·dS)') ...[
+                  widgetFactory.planeForm("Plane (e.g. xy, yx, xz, etc.)", 'P'),
+                  widgetFactory.defaultForm(
+                      'B (Magnetic Field Strength in Tesla)', 'B'),
+                  widgetFactory.directionForm(
+                      'Field direction (ax, ay, az):', 'BD'),
+                  widgetFactory.defaultForm('S (Surface Area in m²):', 'S'),
+                  widgetFactory.directionForm(
+                      'Surface direction (ax, ay, az):', 'SD'),
+                ] else if (selectedFormula ==
+                    'Induced EMF in a loop (E = - dΦB/dt)') ...[
+                  widgetFactory.directionForm(
+                      'dΦB (Change in Magnetic Flux in Weber)', 'dFlux'),
+                  widgetFactory.directionForm(
+                      'dt (Change in Time in seconds)', 'dt'),
+                ],
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: calculateResult,
+                        child: const Text('Calculate'),
+                      ),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: clearFields,
+                        child: const Text('Clear'),
+                      ),
+                    ],
+                  ),
                 ),
+                Container(
+                  width: screenWidth - 10,
+                  height: (_result.length * 50),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 243, 33, 159),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _result.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text("Step $index"),
+                        subtitle: Text(_result[index]),
+                      );
+                    },
+                  ),
+                )
               ],
             ),
-            const SizedBox(height: 20),
-            Text('Result: ${_result.toString()}'),
-          ],
+          ),
         ),
       ),
     );

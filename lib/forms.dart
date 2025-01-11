@@ -40,4 +40,17 @@ class WidgetFactory {
       ],
     );
   }
+
+  // Function for users to choose plane
+  Widget planeForm(String label, String controllerKey) {
+    return TextFormField(
+      decoration: InputDecoration(labelText: label),
+      controller: controllers[controllerKey],
+      keyboardType: TextInputType.text,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(
+            RegExp(r'^(x|y|z|xy|yx|xz|zx|yz|zy)$')),
+      ],
+    );
+  }
 }

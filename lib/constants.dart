@@ -3,4 +3,4 @@ final List<String> formulaList = [
   'Induced EMF in a loop (E = - dΦB/dt)',
 ];
 
-final inputs = ['B', 'BD', 'S', 'SD', 'A', 'dFlux', 'dt'];
+final inputs = ['B', 'BD', 'S', 'SD', 'A', 'P', 'dFlux', 'dt'];
