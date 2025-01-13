@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/plane.dart';
+import 'package:electro_magnetism_solver/calculate.dart';
 import 'package:flutter/material.dart';
 
 import 'forms.dart';
@@ -46,12 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
   late final WidgetFactory widgetFactory;
 
   List<String> _result = [];
-  String selectedFormula = 'Magnetic Flux Integral (ΦB = ∫∫B·dS)';
+  String selectedFormula = formulaList[0];
+  CalcManager calcHandler = CalcManager();
   SubscriptManager subscriptManager = SubscriptManager();
-  PlaneManager planeManager = PlaneManager();
 
   void buildEditor() {
-    // Builds TextEditingController during initState phase.
     for (var input in inputs) {
       controllers[input] = TextEditingController();
     }
@@ -72,73 +71,37 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  double inducedEMFLoop(double dFlux, double dt) {
-    return dt != 0 ? -(dFlux / dt) : 0.0;
-  }
-
-  String multiplySymbolic(String term1, String term2) {
-    /// Helper function for symbolic multiplication
-    if (term1.trim() == "0" || term2.trim() == "0") return "0";
-    if (term1.trim() == "1") return term2.trim();
-    if (term2.trim() == "1") return term1.trim();
-    return "$term1 * $term2";
-  }
-
-  // Magnetic Flux Integral for symbolic variables
-  List<String> magneticFluxIntegralSymbolic(
-      String B, String bd, String S, String sd, String areaElement) {
-    List<String> resultList = [];
-
-    resultList.add('Formula: Φm = ∫∫ B · dS');
-    resultList.add('∫∫ (($B)($bd)) · (($areaElement)($sd))');
-
-    if (bd == sd) {
-      resultList.add('∫∫ ($B) ($areaElement)');
-      resultList.add('($B) ∫∫ ($areaElement)');
-      resultList.add('($B) * ($S)');
-    } else {
-      resultList.add('0 (BD and SD are orthogonal)');
-    }
-    return resultList;
-  }
-
-  // Perform calculation based on selected formula
   void calculateResult() {
+    String areaElm = "";
+    List<String> result = [];
+
+    if (selectedFormula == formulaList[0]) {
+      String plane = controllers['P']?.text ?? "xy";
+      String magField = controllers['B']?.text ?? "0";
+      String surfArea = controllers['S']?.text ?? "0";
+      String fieldDir = controllers['BD']?.text ?? "az";
+      String surfDir = controllers['SD']?.text ?? "az";
+
+      areaElm = calcHandler.calcPlane(plane);
+      result = calcHandler.magFlxIntgSymb(
+          magField, fieldDir, surfArea, surfDir, areaElm);
+      _result = subscriptManager.subscriptFormatting(result);
+    } else if (selectedFormula == formulaList[1]) {
+      // double chgFlux = double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
+      // double chgTime = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
+      // _result = calcHandler.inducedEMFLoop(chgFlux, chgTime);
+    }
+
     setState(() {
-      switch (selectedFormula) {
-        case 'Magnetic Flux Integral (ΦB = ∫∫B·dS)':
-          String P = controllers['P']?.text ?? "xy";
-          String B = controllers['B']?.text ?? "0";
-          String S = controllers['S']?.text ?? "0";
-          String bd = controllers['BD']?.text ?? "az";
-          String sd = controllers['SD']?.text ?? "az";
-
-          // Format plane
-          String areaElement =
-              planeManager.planeSelection(P); //areaElement: e.g. dxdy
-
-          // Use the symbolic flux calculation
-          List<String> result =
-              magneticFluxIntegralSymbolic(B, bd, S, sd, areaElement);
-
-          // Format for display with subscripts and superscripts
-          _result = subscriptManager.subscriptFormatting(result);
-          break;
-        case 'Induced EMF in a loop (E = - dΦB/dt)':
-          double dFlux =
-              double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
-          double dt = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
-          //_result = inducedEMFLoop(dFlux, dt);
-          break;
-      }
+      _result;
     });
   }
 
   void clearFields() {
-    controllers.forEach((key, controller) {
-      controller.clear();
-    });
     setState(() {
+      controllers.forEach((key, controller) {
+        controller.clear();
+      });
       _result.clear();
     });
   }
@@ -146,7 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: null,
@@ -176,22 +138,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }).toList(),
                 ),
-                if (selectedFormula ==
-                    'Magnetic Flux Integral (ΦB = ∫∫B·dS)') ...[
-                  widgetFactory.planeForm("Plane (e.g. xy, yx, xz, etc.)", 'P'),
-                  widgetFactory.defaultForm(
-                      'B (Magnetic Field Strength in Tesla)', 'B'),
-                  widgetFactory.directionForm(
-                      'Field direction (ax, ay, az):', 'BD'),
-                  widgetFactory.defaultForm('S (Surface Area in m²):', 'S'),
-                  widgetFactory.directionForm(
-                      'Surface direction (ax, ay, az):', 'SD'),
-                ] else if (selectedFormula ==
-                    'Induced EMF in a loop (E = - dΦB/dt)') ...[
-                  widgetFactory.directionForm(
-                      'dΦB (Change in Magnetic Flux in Weber)', 'dFlux'),
-                  widgetFactory.directionForm(
-                      'dt (Change in Time in seconds)', 'dt'),
+                if (selectedFormula == formulaList[0]) ...[
+                  widgetFactory.planeForm(planeHint, 'P'),
+                  widgetFactory.defaultForm(magFieldHint, 'B'),
+                  widgetFactory.directionForm(fieldDirecHint, 'BD'),
+                  widgetFactory.defaultForm(surfAreaHint, 'S'),
+                  widgetFactory.directionForm(surfDirecHint, 'SD'),
+                ] else if (selectedFormula == formulaList[1]) ...[
+                  widgetFactory.directionForm(chgMagFluxHint, 'dFlux'),
+                  widgetFactory.directionForm(chgTimeHint, 'dt'),
                 ],
                 Padding(
                   padding: const EdgeInsets.all(10),
