@@ -1,3 +1,5 @@
+import 'constants.dart';
+
 class SubscriptManager {
   List<String> subscriptFormatting(List<String> result) {
     List<String> formattedResult = [];
@@ -23,30 +25,11 @@ class SubscriptManager {
 
   // Helper function to convert numbers to subscript
   String convertToSubscript(String number) {
-    const subscriptDigits = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
-    return number
-        .split('')
-        .map((digit) => subscriptDigits[int.parse(digit)])
-        .join('');
+    return number.split('').map((digit) => subscriptDigits[int.parse(digit)]).join('');
   }
 
   // Helper function to convert numbers to superscript
   String convertToSuperscript(String number) {
-    const superscriptDigits = [
-      '⁰',
-      '¹',
-      '²',
-      '³',
-      '⁴',
-      '⁵',
-      '⁶',
-      '⁷',
-      '⁸',
-      '⁹'
-    ];
-    return number
-        .split('')
-        .map((digit) => superscriptDigits[int.parse(digit)])
-        .join('');
+    return number.split('').map((digit) => superscriptDigits[int.parse(digit)]).join('');
   }
 }
