@@ -25,11 +25,17 @@ class SubscriptManager {
 
   // Helper function to convert numbers to subscript
   String convertToSubscript(String number) {
-    return number.split('').map((digit) => subscriptDigits[int.parse(digit)]).join('');
+    return number
+        .split('')
+        .map((digit) => subscriptDigits[int.parse(digit)])
+        .join('');
   }
 
   // Helper function to convert numbers to superscript
   String convertToSuperscript(String number) {
-    return number.split('').map((digit) => superscriptDigits[int.parse(digit)]).join('');
+    return number
+        .split('')
+        .map((digit) => superscriptDigits[int.parse(digit)])
+        .join('');
   }
 }

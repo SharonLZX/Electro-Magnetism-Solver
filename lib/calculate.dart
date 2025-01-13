@@ -1,5 +1,5 @@
-class CalcManager{
-  String calcPlane(String p){
+class CalcManager {
+  String calcPlane(String p) {
     return planeSelection(p);
   }
 
@@ -11,11 +11,11 @@ class CalcManager{
     return areaElement;
   }
 
-  List<String> magFlxIntgSymb(B, bd, S, sd, areaElm){
+  List<String> magFlxIntgSymb(B, bd, S, sd, areaElm) {
     List<String> result = ["Formula: Φm = ∫∫ B · dS"];
-    
+
     result.add('∫∫ (($B)($bd)) · (($areaElm)($sd))');
-    if(bd == sd){
+    if (bd == sd) {
       result.add('∫∫ ($B) ($areaElm)');
       result.add('($B) ∫∫ ($areaElm)');
       result.add('($B) * ($S)');
@@ -25,18 +25,18 @@ class CalcManager{
     return result;
   }
 
-  String mulSymb(term_1, term_2){
+  String mulSymb(term_1, term_2) {
     // Not used in main.dart
-    if (term_1.trim() == "0"|| term_2.trim() == "0"){
+    if (term_1.trim() == "0" || term_2.trim() == "0") {
       return "0";
-    }else if (term_1.trim() == "1"){
+    } else if (term_1.trim() == "1") {
       return term_2.trim();
-    }else{
+    } else {
       return term_1.trim();
     }
   }
 
-  double inducedEMFLoop(chgFlux, chgTime){
-    return chgFlux != 0 ? -(chgFlux/chgTime) : 0.0;
+  double inducedEMFLoop(chgFlux, chgTime) {
+    return chgFlux != 0 ? -(chgFlux / chgTime) : 0.0;
   }
 }

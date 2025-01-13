@@ -93,32 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     setState(() {
-      switch (selectedFormula) {
-        case 'Magnetic Flux Integral (ΦB = ∫∫B·dS)':
-          String P = controllers['P']?.text ?? "xy";
-          String B = controllers['B']?.text ?? "0";
-          String S = controllers['S']?.text ?? "0";
-          String bd = controllers['BD']?.text ?? "az";
-          String sd = controllers['SD']?.text ?? "az";
-
-          // Format plane
-          String areaElement =
-              planeManager.planeSelection(P); //areaElement: e.g. dxdy
-
-          // Use the symbolic flux calculation
-          List<String> result =
-              magneticFluxIntegralSymbolic(B, bd, S, sd, areaElement);
-
-          // Format for display with subscripts and superscripts
-          _result = subscriptManager.subscriptFormatting(result);
-          break;
-        case 'Induced EMF in a loop (E = - dΦB/dt)':
-          double dFlux =
-              double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
-          double dt = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
-          //_result = inducedEMFLoop(dFlux, dt);
-          break;
-      }
+      _result;
     });
   }
 
@@ -134,7 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: null,
       body: Padding(
@@ -163,22 +137,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }).toList(),
                 ),
-                if (selectedFormula ==
-                    'Magnetic Flux Integral (ΦB = ∫∫B·dS)') ...[
-                  widgetFactory.planeForm("Plane (e.g. xy, yx, xz, etc.)", 'P'),
-                  widgetFactory.defaultForm(
-                      'B (Magnetic Field Strength in Tesla)', 'B'),
-                  widgetFactory.directionForm(
-                      'Field direction (ax, ay, az):', 'BD'),
-                  widgetFactory.defaultForm('S (Surface Area in m²):', 'S'),
-                  widgetFactory.directionForm(
-                      'Surface direction (ax, ay, az):', 'SD'),
-                ] else if (selectedFormula ==
-                    'Induced EMF in a loop (E = - dΦB/dt)') ...[
-                  widgetFactory.directionForm(
-                      'dΦB (Change in Magnetic Flux in Weber)', 'dFlux'),
-                  widgetFactory.directionForm(
-                      'dt (Change in Time in seconds)', 'dt'),
+                if (selectedFormula == formulaList[0]) ...[
+                  widgetFactory.planeForm(planeHint, 'P'),
+                  widgetFactory.defaultForm(magFieldHint, 'B'),
+                  widgetFactory.directionForm(fieldDirecHint, 'BD'),
+                  widgetFactory.defaultForm(surfAreaHint, 'S'),
+                  widgetFactory.directionForm(surfDirecHint, 'SD'),
+                ] else if (selectedFormula == formulaList[1]) ...[
+                  widgetFactory.directionForm(chgMagFluxHint, 'dFlux'),
+                  widgetFactory.directionForm(chgTimeHint, 'dt'),
                 ],
                 Padding(
                   padding: const EdgeInsets.all(10),
@@ -192,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: clearFields,
-                        child: const Text('Restart'),
+                        child: const Text('Clear'),
                       ),
                     ],
                   ),
@@ -206,7 +173,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemCount: _result.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        contentPadding: EdgeInsets.zero,
                         title: Text("Step $index"),
                         subtitle: Text(_result[index]),
                       );
