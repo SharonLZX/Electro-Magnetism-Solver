@@ -82,6 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
       String fieldDir = controllers['BD']?.text ?? "az";
       String surfDir = controllers['SD']?.text ?? "az";
 
+      if (surfArea == "1") {
+        surfArea = "";
+      }
+
       areaElm = calcHandler.calcPlane(plane);
       result = calcHandler.magFlxIntgSymb(
           magField, fieldDir, surfArea, surfDir, areaElm);
