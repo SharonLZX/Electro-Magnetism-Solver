@@ -1,3 +1,4 @@
+import 'package:electro_magnetism_solver/constants.dart';
 import 'package:electro_magnetism_solver/integration_rules.dart';
 
 class CalcManager {
@@ -12,8 +13,10 @@ class CalcManager {
 
   String planeSelection(String plane) {
     List<String> planelist = plane.split('');
+    
     plane1 = planelist[0];
     plane2 = planelist[1];
+
     String areaElement = "d${plane1}d$plane2";
     return areaElement;
   }
@@ -22,34 +25,36 @@ class CalcManager {
     List<String> result = ["Formula: Φm = ∫∫B·dS"];
 
     result.add('∫∫($B)($bd)·($areaElm)($sd)');
-    if (dependent(B)) {
-      if (bd == sd) {
-        result.add('∫∫$B$areaElm');
-        if (!B.contains("(x)") && !B.contains("(y)") && !B.contains('(z)')) {
-          result.add('$B∫∫$areaElm');
-        } else {
-          B = integrationHandler.integrationManager(B);
-          result.add('$B${plane2.replaceAll('d', '')}');
-          result.add('$B$S');
-        }
-      } else {
-        result.add('0 (BD and SD are orthogonal)');
-      }
-    } else {
+
+    if (!dependent(B)){
       result.add('∫($B∫d$plane1)d$plane2');
       result.add('∫($B·$plane1)d$plane2');
       result.add('$plane1∫${B}d$plane2');
       result.add('$plane1·${integrationHandler.integrationManager(B)}');
+      return result;
     }
+
+    if (bd!=sd){
+      result.add('0 (BD and SD are orthogonal)');
+      return result;
+    }
+
+    result.add('∫∫$B$areaElm');
+    if (!xyzPlane.any(B.contains)){
+      result.add('$B∫∫$areaElm');
+      return result;
+    }
+
+    B = integrationHandler.integrationManager(B);
+    result.add('$B${plane2.replaceAll('d', '')}');
+    result.add('$B$S');
     return result;
   }
 
   bool dependent(B) {
-    if ((B.contains('x') && plane1.contains('x')) |
-        (B.contains('y') && plane1.contains('y')) |
-        (B.contains('z') && plane1.contains('z'))) {
+    if (['x', 'y', 'z'].any((axis) => B.contains(axis) && plane1.contains(axis))) {
       return true;
-    }
+    } 
     return false;
   }
 

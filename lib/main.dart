@@ -87,12 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       areaElm = calcHandler.calcPlane(plane);
-      result = calcHandler.magFlxIntgSymb(
-          magField, fieldDir, surfArea, surfDir, areaElm);
+      result = calcHandler.magFlxIntgSymb(magField, fieldDir, surfArea, surfDir, areaElm);
       _result = subscriptManager.subscriptFormatting(result);
     } else if (selectedFormula == formulaList[1]) {
-      // double chgFlux = double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
-      // double chgTime = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
+      double chgFlux = double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
+      double chgTime = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
       // _result = calcHandler.inducedEMFLoop(chgFlux, chgTime);
     }
 

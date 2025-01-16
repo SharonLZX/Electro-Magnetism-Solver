@@ -37,3 +37,5 @@ const String surfAreaHint = 'S (Surface Area in m²):';
 const String surfDirecHint = 'Surface direction (ax, ay, az):';
 const String chgMagFluxHint = 'dΦB (Change in Magnetic Flux in Weber)';
 const String chgTimeHint = 'dt (Change in Time in seconds)';
+
+const List<String> xyzPlane = ["x", "y", "z"];
