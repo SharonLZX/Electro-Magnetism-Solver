@@ -1,5 +1,5 @@
-import 'package:electro_magnetism_solver/constants.dart';
-import 'package:electro_magnetism_solver/integration_rules.dart';
+import 'package:electro_magnetism_solver/main/core/constants.dart';
+import 'package:electro_magnetism_solver/main/features/calculations/integration_rules.dart';
 
 class CalcManager {
   IntegrationRules integrationHandler = IntegrationRules();

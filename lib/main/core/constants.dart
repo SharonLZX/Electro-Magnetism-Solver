@@ -3,8 +3,6 @@ List<String> formulaList = [
   'Induced EMF in a loop (E = - dΦB/dt)',
 ];
 
-final inputs = ['B', 'BD', 'S', 'SD', 'A', 'P', 'dFlux', 'dt'];
-
 const List<String> superscriptDigits = [
   '⁰',
   '¹',
@@ -38,4 +36,5 @@ const String surfDirecHint = 'Surface direction (ax, ay, az):';
 const String chgMagFluxHint = 'dΦB (Change in Magnetic Flux in Weber)';
 const String chgTimeHint = 'dt (Change in Time in seconds)';
 
+final List<String>inputs = ['B', 'BD', 'S', 'SD', 'A', 'P', 'dFlux', 'dt'];
 const List<String> xyzPlane = ["x", "y", "z"];
