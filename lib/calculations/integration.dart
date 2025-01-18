@@ -1,17 +1,15 @@
-class IntegrationRules {
-  List<String> funcList = []; // Contains trig + arg.
-
+class Integration {
+  List<String> funcList = []; 
   String integrationManager(func) {
     if (func.contains("sin") || func.contains("cos")) {
       funcList = formatFunc(func);
       func = "${trigRule(funcList[0])}(${funcList[1]})";
     }
-
     return func;
   }
 
   List<String> formatFunc(func) {
-    List<String> tempList = []; // Contains trig + arg.
+    List<String> tempList = [];
     RegExp regExp = RegExp(r'(\w+)\((.+)\)');
     Match? match = regExp.firstMatch(func);
     if (match != null) {

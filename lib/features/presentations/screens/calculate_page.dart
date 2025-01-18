@@ -1,18 +1,18 @@
-import 'package:electro_magnetism_solver/db_handler.dart';
-import 'package:electro_magnetism_solver/main/result_model.dart';
-import 'package:electro_magnetism_solver/main/widget/custom/print_button.dart';
-import 'package:electro_magnetism_solver/main/widget/custom/save_button.dart';
-import 'package:electro_magnetism_solver/main/widget/custom/share_button.dart';
 import 'package:flutter/material.dart';
-import 'package:electro_magnetism_solver/main/core/constants.dart';
-import 'package:electro_magnetism_solver/main/features/calculations/subscript.dart';
-import 'package:electro_magnetism_solver/main/features/forms/forms.dart';
-import 'package:electro_magnetism_solver/main/widget/custom/result_list.dart';
-import 'package:electro_magnetism_solver/main/widget/custom/solve_button.dart';
-import 'package:electro_magnetism_solver/main/features/calculations/padded_forms.dart';
-import 'package:electro_magnetism_solver/main/widget/custom/dropdown_button.dart';
-import 'package:electro_magnetism_solver/main/features/calculations/calculate.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:electro_magnetism_solver/utils/forms.dart';
+import 'package:electro_magnetism_solver/utils/formatters/padded_forms.dart';
+import 'package:electro_magnetism_solver/calculations/calculate.dart';
+import 'package:electro_magnetism_solver/utils/formatters/subscripts.dart';
+import 'package:electro_magnetism_solver/core/constants/constants.dart';
+import 'package:electro_magnetism_solver/data/local/database_helper.dart';
+import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_save.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_print.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_solve.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_share.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_drop_down.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/list_view_result.dart';
 
 class CalculatePage extends StatefulWidget {
   const CalculatePage({super.key});
@@ -22,25 +22,27 @@ class CalculatePage extends StatefulWidget {
 }
 
 class _CalculatePageState extends State<CalculatePage> {
+  List<String> result = [];
+  List<String> questionBank = [];
+  late WidgetFactory widgetFactory;
+  String selectedFormula = formulaList[0];
+
   final Map<String, TextEditingController> controllers = {
-    'numberInput': TextEditingController(),
     'defaultInput': TextEditingController(),
     'directionInput': TextEditingController(),
     'planeInput': TextEditingController()
   };
 
-  late final WidgetFactory widgetFactory;
-  List<String> _result = [];
-  String selectedFormula = formulaList[0];
-  CalcManager calcHandler = CalcManager();
-  SubscriptManager subscriptManager = SubscriptManager();
-  List<String> questionBank = [];
   DBHandler dbHandler = DBHandler();
+  Calculate calcHandler = Calculate();
+  SubscriptManager subscriptManager = SubscriptManager();
 
   void buildEditor() {
     for (var input in inputs) {
       controllers[input] = TextEditingController();
     }
+
+    widgetFactory = WidgetFactory(controllers);
   }
 
   void calculateResult() {
@@ -60,10 +62,10 @@ class _CalculatePageState extends State<CalculatePage> {
 
       questionBank.addAll([plane, magField, surfArea, fieldDir, surfDir]);
 
-      areaElm = calcHandler.calcPlane(plane);
+      areaElm = calcHandler.planeFormatting(plane);
       result = calcHandler.magFlxIntgSymb(
           magField, fieldDir, surfArea, surfDir, areaElm);
-      _result = subscriptManager.subscriptFormatting(result);
+      result = subscriptManager.subscriptFormatting(result);
     } else if (selectedFormula == formulaList[1]) {
       // double chgFlux = double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
       // double chgTime = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
@@ -71,33 +73,38 @@ class _CalculatePageState extends State<CalculatePage> {
     }
 
     setState(() {
-      _result;
+      result;
     });
   }
 
   void shareResult() {
-    Share.share(_result.last);
+    Share.share(result.last);
   }
 
-  void printResult() async{
+  void saveResult() async {
+    var resMap =
+        Result(id: 0, question: questionBank.join(), result: result.join());
+
+    await dbHandler.insertResult(resMap);
+  }
+
+  void printResult() async {
     final List<Result> storedresult = await dbHandler.retrieveResult();
     debugPrint(storedresult.join());
   }
 
-  void saveResult() async{
-    var resMap = Result(
-      id: 0, 
-    question: questionBank.join(), 
-    result: _result.join());
-
-    await dbHandler.insertResult(resMap);
+  void dropDownChange(String? newValue) {
+    selectedFormula = newValue!;
+    controllers.forEach((key, controller) {
+      controller.clear();
+    });
+    result.clear();
   }
 
   @override
   void initState() {
     super.initState();
     buildEditor();
-    widgetFactory = WidgetFactory(controllers);
   }
 
   @override
@@ -123,11 +130,7 @@ class _CalculatePageState extends State<CalculatePage> {
               CustomDropDown(
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedFormula = newValue!;
-                      controllers.forEach((key, controller) {
-                        controller.clear();
-                      });
-                      _result.clear();
+                      dropDownChange(newValue);
                     });
                   },
                   selectedFormula: selectedFormula),
@@ -143,8 +146,7 @@ class _CalculatePageState extends State<CalculatePage> {
                 paddedForm(widgetFactory.customForm, 1, chgTimeHint, 'dt'),
               ],
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 child: SizedBox(
                     height: 40,
                     width: double.infinity,
@@ -153,10 +155,10 @@ class _CalculatePageState extends State<CalculatePage> {
                     )),
               ),
               Visibility(
-                visible: (_result.length > 1),
+                visible: (result.length > 1),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 5, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   child: SizedBox(
                       height: 40,
                       width: double.infinity,
@@ -164,10 +166,10 @@ class _CalculatePageState extends State<CalculatePage> {
                 ),
               ),
               Visibility(
-                visible: (_result.length > 1),
+                visible: (result.length > 1),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 5, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   child: SizedBox(
                       height: 40,
                       width: double.infinity,
@@ -175,10 +177,10 @@ class _CalculatePageState extends State<CalculatePage> {
                 ),
               ),
               Visibility(
-                visible: (_result.length > 1),
+                visible: (result.length > 1),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 5, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   child: SizedBox(
                       height: 40,
                       width: double.infinity,
@@ -187,9 +189,9 @@ class _CalculatePageState extends State<CalculatePage> {
               ),
               SizedBox(
                   width: screenWidth - 10,
-                  height: (_result.length * 70),
+                  height: (result.length * 70),
                   child: ResultList(
-                    result: _result,
+                    result: result,
                   )),
             ],
           ),

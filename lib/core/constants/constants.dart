@@ -1,9 +1,18 @@
-List<String> formulaList = [
+final List<String> inputs = ['B', 'BD', 'S', 'SD', 'A', 'P', 'dFlux', 'dt'];
+final List<String> xyzPlane = ["x", "y", "z"];
+
+final List<String> formulaList = [
   'Magnetic Flux Integral (ΦB = ∫∫B·dS)',
   'Induced EMF in a loop (E = - dΦB/dt)',
 ];
 
-const List<String> superscriptDigits = [
+final List<RegExp> regexList = [
+  RegExp(r'^(x|y|z|xy|yx|xz|zx|yz|zy)$'),
+  RegExp(r'^(a|ax|ay|az)$'),
+  RegExp(r'^[a-zA-Z0-9+\-*/()]*\^?\d*$'),
+];
+
+final List<String> superscriptDigits = [
   '⁰',
   '¹',
   '²',
@@ -15,7 +24,8 @@ const List<String> superscriptDigits = [
   '⁸',
   '⁹'
 ];
-const List<String> subscriptDigits = [
+
+final List<String> subscriptDigits = [
   '₀',
   '₁',
   '₂',
@@ -36,11 +46,6 @@ const String surfDirecHint = 'Surface direction (ax, ay, az):';
 const String chgMagFluxHint = 'dΦB (Change in Magnetic Flux in Weber)';
 const String chgTimeHint = 'dt (Change in Time in seconds)';
 
-final List<String>inputs = ['B', 'BD', 'S', 'SD', 'A', 'P', 'dFlux', 'dt'];
-const List<String> xyzPlane = ["x", "y", "z"];
 
-List<RegExp> regexList = [
-  RegExp(r'^(x|y|z|xy|yx|xz|zx|yz|zy)$'),
-  RegExp(r'^(a|ax|ay|az)$'),
-  RegExp(r'^[a-zA-Z0-9+\-*/()]*\^?\d*$'),
-];
+
+

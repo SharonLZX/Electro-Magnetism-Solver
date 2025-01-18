@@ -14,27 +14,21 @@ class CustomTFF extends StatelessWidget {
     required this.controllerKey,
     required this.regexp,
   });
-  
+
   @override
   Widget build(BuildContext context) {
-
     return TextFormField(
-      decoration:  InputDecoration(
-    hintText: label,
-    hintStyle: const TextStyle(color: Colors.grey),
-    border: const OutlineInputBorder(
-      borderSide: BorderSide(width: 1.0),
-      borderRadius: BorderRadius.zero
-    ),
-  ),
+      decoration: InputDecoration(
+        hintText: label,
+        hintStyle: const TextStyle(color: Colors.grey),
+        border: const OutlineInputBorder(
+            borderSide: BorderSide(width: 1.0),
+            borderRadius: BorderRadius.zero),
+      ),
       style: const TextStyle(color: Colors.black),
       controller: controllers[controllerKey],
       keyboardType: TextInputType.text,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(regexp)
-      ],
+      inputFormatters: [FilteringTextInputFormatter.allow(regexp)],
     );
   }
 }
-
-

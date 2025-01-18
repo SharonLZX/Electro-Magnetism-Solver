@@ -1,6 +1,6 @@
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:electro_magnetism_solver/main/result_model.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
 
 class DBHandler {
   late Future<Database> database;

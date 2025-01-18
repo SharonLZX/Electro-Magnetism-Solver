@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:electro_magnetism_solver/main/core/constants.dart';
-import 'package:electro_magnetism_solver/utils/custom_textformfield.dart';
+import 'package:electro_magnetism_solver/core/constants/constants.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/custom_textformfield.dart';
 
 class WidgetFactory {
   final Map<String, TextEditingController> controllers;

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:electro_magnetism_solver/main/core/constants.dart';
+import 'package:electro_magnetism_solver/core/constants/constants.dart';
 
 class CustomDropDown extends StatefulWidget {
-  final ValueChanged<String?> onChanged;
   final String selectedFormula;
+  final ValueChanged<String?> onChanged;
+
   const CustomDropDown(
       {super.key, 
       required this.onChanged, 
       required this.selectedFormula});
-
-
+      
   @override
   State<CustomDropDown> createState() => _CustomDropDownState();
 }

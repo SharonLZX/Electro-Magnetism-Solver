@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/main/screens/calculate_page.dart';
+import 'package:electro_magnetism_solver/features/presentations/screens/calculate_page.dart';
 
 import 'package:flutter/material.dart';
 
@@ -13,19 +13,19 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const AppPage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class AppPage extends StatefulWidget {
+  const AppPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AppPage> createState() => _AppPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AppPageState extends State<AppPage> {
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
