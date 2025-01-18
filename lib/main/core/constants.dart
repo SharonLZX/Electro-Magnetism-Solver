@@ -38,3 +38,9 @@ const String chgTimeHint = 'dt (Change in Time in seconds)';
 
 final List<String>inputs = ['B', 'BD', 'S', 'SD', 'A', 'P', 'dFlux', 'dt'];
 const List<String> xyzPlane = ["x", "y", "z"];
+
+List<RegExp> regexList = [
+  RegExp(r'^(x|y|z|xy|yx|xz|zx|yz|zy)$'),
+  RegExp(r'^(a|ax|ay|az)$'),
+  RegExp(r'^[a-zA-Z0-9+\-*/()]*\^?\d*$'),
+];
