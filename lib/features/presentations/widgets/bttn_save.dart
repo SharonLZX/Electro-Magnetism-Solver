@@ -6,13 +6,23 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 96, 111, 210),
-          foregroundColor: Colors.black,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-      onPressed: onPressed,
-      child: const Text('S A V E'),
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          color: const Color.fromARGB(255, 207, 207, 207),
+          child: SizedBox(
+            width: (screenWidth-100) / 4, 
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Icon(Icons.save), SizedBox(width: 8), Text("Save")],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

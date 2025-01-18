@@ -6,13 +6,27 @@ class SolveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 174, 213, 129),
-          foregroundColor: Colors.black,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-      onPressed: onPressed,
-      child: const Text('S O L V E'),
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          color: const Color.fromARGB(255, 207, 207, 207),
+          child: SizedBox(
+            width: (screenWidth-100) / 4, 
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.calculate_sharp),
+                SizedBox(width: 8),
+                Text("Solve")
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

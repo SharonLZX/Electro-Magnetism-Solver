@@ -1,3 +1,4 @@
+import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:electro_magnetism_solver/utils/forms.dart';
@@ -22,16 +23,16 @@ class CalculatePage extends StatefulWidget {
 }
 
 class _CalculatePageState extends State<CalculatePage> {
-  List<String> result = [];
-  List<String> questionBank = [];
-  late WidgetFactory widgetFactory;
-  String selectedFormula = formulaList[0];
-
   final Map<String, TextEditingController> controllers = {
     'defaultInput': TextEditingController(),
     'directionInput': TextEditingController(),
     'planeInput': TextEditingController()
   };
+
+  late final WidgetFactory widgetFactory;
+  List<String> _result = [];
+  List<String> questionBank = [];
+  String selectedFormula = formulaList[0];
 
   DBHandler dbHandler = DBHandler();
   Calculate calcHandler = Calculate();
@@ -41,8 +42,6 @@ class _CalculatePageState extends State<CalculatePage> {
     for (var input in inputs) {
       controllers[input] = TextEditingController();
     }
-
-    widgetFactory = WidgetFactory(controllers);
   }
 
   void calculateResult() {
@@ -65,7 +64,7 @@ class _CalculatePageState extends State<CalculatePage> {
       areaElm = calcHandler.planeFormatting(plane);
       result = calcHandler.magFlxIntgSymb(
           magField, fieldDir, surfArea, surfDir, areaElm);
-      result = subscriptManager.subscriptFormatting(result);
+      _result = subscriptManager.subscriptFormatting(result);
     } else if (selectedFormula == formulaList[1]) {
       // double chgFlux = double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
       // double chgTime = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
@@ -73,19 +72,12 @@ class _CalculatePageState extends State<CalculatePage> {
     }
 
     setState(() {
-      result;
+      _result;
     });
   }
 
   void shareResult() {
-    Share.share(result.last);
-  }
-
-  void saveResult() async {
-    var resMap =
-        Result(id: 0, question: questionBank.join(), result: result.join());
-
-    await dbHandler.insertResult(resMap);
+    Share.share(_result.toString());
   }
 
   void printResult() async {
@@ -93,18 +85,18 @@ class _CalculatePageState extends State<CalculatePage> {
     debugPrint(storedresult.join());
   }
 
-  void dropDownChange(String? newValue) {
-    selectedFormula = newValue!;
-    controllers.forEach((key, controller) {
-      controller.clear();
-    });
-    result.clear();
+  void saveResult() async {
+    var resMap =
+        Result(id: 0, question: questionBank.join(), result: _result.join());
+
+    await dbHandler.insertResult(resMap);
   }
 
   @override
   void initState() {
     super.initState();
     buildEditor();
+    widgetFactory = WidgetFactory(controllers);
   }
 
   @override
@@ -115,8 +107,24 @@ class _CalculatePageState extends State<CalculatePage> {
     super.dispose();
   }
 
+  bool isCntrlFilled() {
+    String? plane = controllers['P']?.text;
+    String? magField = controllers['B']?.text;
+    String? surfArea = controllers['S']?.text;
+    String? fieldDir = controllers['BD']?.text;
+    String? surfDir = controllers['SD']?.text;
+
+    // Return true if all required fields are filled (i.e., not default values)
+    return (plane!.isNotEmpty &&
+        magField!.isNotEmpty &&
+        surfArea!.isNotEmpty &&
+        fieldDir!.isNotEmpty &&
+        surfDir!.isNotEmpty);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final snacker = Snacker(context);
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
@@ -130,7 +138,11 @@ class _CalculatePageState extends State<CalculatePage> {
               CustomDropDown(
                   onChanged: (String? newValue) {
                     setState(() {
-                      dropDownChange(newValue);
+                      selectedFormula = newValue!;
+                      controllers.forEach((key, controller) {
+                        controller.clear();
+                      });
+                      _result.clear();
                     });
                   },
                   selectedFormula: selectedFormula),
@@ -145,53 +157,39 @@ class _CalculatePageState extends State<CalculatePage> {
                     widgetFactory.customForm, 1, chgMagFluxHint, 'dFlux'),
                 paddedForm(widgetFactory.customForm, 1, chgTimeHint, 'dt'),
               ],
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                child: SizedBox(
-                    height: 40,
-                    width: double.infinity,
-                    child: SolveButton(
-                      onPressed: calculateResult,
-                    )),
-              ),
-              Visibility(
-                visible: (result.length > 1),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  child: SizedBox(
-                      height: 40,
-                      width: double.infinity,
-                      child: ShareButton(onPressed: shareResult)),
-                ),
-              ),
-              Visibility(
-                visible: (result.length > 1),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  child: SizedBox(
-                      height: 40,
-                      width: double.infinity,
-                      child: SaveButton(onPressed: saveResult)),
-                ),
-              ),
-              Visibility(
-                visible: (result.length > 1),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  child: SizedBox(
-                      height: 40,
-                      width: double.infinity,
-                      child: PrintButton(onPressed: printResult)),
-                ),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SolveButton(
+                    onPressed: () {
+                      if (isCntrlFilled()) {
+                        snacker.showSuccess("Calculating...");
+                        calculateResult();
+                      } else {
+                        snacker.showError("Ensure all fields are filled.");
+                      }
+                    },
+                  ),
+                  Visibility(
+                    visible: (_result.length > 1),
+                    child: ShareButton(onPressed: shareResult),
+                  ),
+                  Visibility(
+                    visible: (_result.length > 1),
+                    child: SaveButton(onPressed: saveResult),
+                  ),
+                  /*Visibility(
+                    visible: (_result.length > 1),
+                    child: PrintButton(onPressed: printResult),
+                  ),*/
+                ],
               ),
               SizedBox(
                   width: screenWidth - 10,
-                  height: (result.length * 70),
+                  height: (_result.length * 70),
                   child: ResultList(
-                    result: result,
+                    result: _result,
                   )),
             ],
           ),

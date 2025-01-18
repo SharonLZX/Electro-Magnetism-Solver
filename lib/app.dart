@@ -48,6 +48,10 @@ class _AppPageState extends State<AppPage> {
               icon: Icon(Icons.view_list),
               label: 'History',
             ),
+            NavigationDestination(
+              icon: Icon(Icons.ssid_chart),
+              label: 'Graph',
+            ),
           ],
         ),
         body: IndexedStack(
