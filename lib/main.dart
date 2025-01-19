@@ -1,10 +1,10 @@
-import 'package:electro_magnetism_solver/data/local/database_helper.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:async';
 import 'package:window_size/window_size.dart';
 import 'package:electro_magnetism_solver/app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:electro_magnetism_solver/data/local/database_helper.dart';
 
 void setupWindow(){
   if (kIsWeb){

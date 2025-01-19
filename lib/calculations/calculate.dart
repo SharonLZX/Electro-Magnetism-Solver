@@ -1,8 +1,13 @@
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/calculations/integration.dart';
+import 'package:electro_magnetism_solver/utils/formatters/exp_to_latex.dart';
+import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class Calculate {
   Integration integrationHandler = Integration();
+  Parser parser = Parser();
+  ExpToLatex expToLatex = ExpToLatex();
 
   String plane_1 = "";
   String plane_2 = "";
@@ -50,7 +55,9 @@ class Calculate {
     return false;
   }
 
-  double inducedEMFLoop(chgFlux, chgTime) {
-    return chgFlux != 0 ? -(chgFlux / chgTime) : 0.0;
+  String inducedEMFLoop(String chgFlux) {
+    Expression exp = parser.parse(chgFlux);
+    Expression derivativeResult = exp.derive('t').simplify();
+    return expToLatex.expressionToLatex(derivativeResult);
   }
 }

@@ -1,13 +1,14 @@
-import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:electro_magnetism_solver/utils/forms.dart';
-import 'package:electro_magnetism_solver/utils/formatters/padded_forms.dart';
 import 'package:electro_magnetism_solver/calculations/calculate.dart';
-import 'package:electro_magnetism_solver/utils/formatters/subscripts.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
+import 'package:electro_magnetism_solver/utils/formatters/subscripts.dart';
+import 'package:electro_magnetism_solver/utils/formatters/padded_forms.dart';
 import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
+import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_save.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_print.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_solve.dart';
@@ -28,15 +29,15 @@ class _CalculatePageState extends State<CalculatePage> {
     'directionInput': TextEditingController(),
     'planeInput': TextEditingController()
   };
-
   late final WidgetFactory widgetFactory;
+
   List<String> _result = [];
   List<String> questionBank = [];
   String selectedFormula = formulaList[0];
 
   DBHandler dbHandler = DBHandler();
   Calculate calcHandler = Calculate();
-  SubscriptManager subscriptManager = SubscriptManager();
+  Subscript subscriptHandler = Subscript();
 
   void buildEditor() {
     for (var input in inputs) {
@@ -46,6 +47,7 @@ class _CalculatePageState extends State<CalculatePage> {
 
   void calculateResult() {
     String areaElm = "";
+    String _resStr = "";
     List<String> result = [];
 
     if (selectedFormula == formulaList[0]) {
@@ -64,11 +66,16 @@ class _CalculatePageState extends State<CalculatePage> {
       areaElm = calcHandler.planeFormatting(plane);
       result = calcHandler.magFlxIntgSymb(
           magField, fieldDir, surfArea, surfDir, areaElm);
-      _result = subscriptManager.subscriptFormatting(result);
+      _result = subscriptHandler.subscriptFormatting(result);
     } else if (selectedFormula == formulaList[1]) {
-      // double chgFlux = double.tryParse(controllers['dFlux']?.text ?? '0') ?? 0;
-      // double chgTime = double.tryParse(controllers['dt']?.text ?? '0') ?? 0;
-      // _result = calcHandler.inducedEMFLoop(chgFlux, chgTime);
+      String chgFlux = controllers['dFlux']?.text ?? '0'; 
+      _result.add('E = - dΦB/dt');
+      _resStr = calcHandler.inducedEMFLoop(chgFlux);
+      if (_resStr == "0"){
+        _result.add("Unable\ to\ compute\ complex\ equation.");
+      }else{
+        _result.add(_resStr);
+      }
     }
 
     setState(() {
@@ -113,13 +120,17 @@ class _CalculatePageState extends State<CalculatePage> {
     String? surfArea = controllers['S']?.text;
     String? fieldDir = controllers['BD']?.text;
     String? surfDir = controllers['SD']?.text;
+    String? chgFlux = controllers['dFlux']?.text;
 
-    // Return true if all required fields are filled (i.e., not default values)
-    return (plane!.isNotEmpty &&
-        magField!.isNotEmpty &&
-        surfArea!.isNotEmpty &&
-        fieldDir!.isNotEmpty &&
-        surfDir!.isNotEmpty);
+    if (selectedFormula == formulaList[0]) {
+      return (plane!.isNotEmpty &&
+          magField!.isNotEmpty &&
+          surfArea!.isNotEmpty &&
+          fieldDir!.isNotEmpty &&
+          surfDir!.isNotEmpty);
+    } else {
+      return (chgFlux!.isNotEmpty);
+    }
   }
 
   @override
@@ -154,10 +165,8 @@ class _CalculatePageState extends State<CalculatePage> {
                 paddedForm(widgetFactory.customForm, 1, surfDirecHint, 'SD'),
               ] else if (selectedFormula == formulaList[1]) ...[
                 paddedForm(
-                    widgetFactory.customForm, 1, chgMagFluxHint, 'dFlux'),
-                paddedForm(widgetFactory.customForm, 1, chgTimeHint, 'dt'),
+                    widgetFactory.customForm, 3, chgMagFluxHint, 'dFlux'),
               ],
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -165,6 +174,9 @@ class _CalculatePageState extends State<CalculatePage> {
                     onPressed: () {
                       if (isCntrlFilled()) {
                         snacker.showSuccess("Calculating...");
+                        if (_result.isNotEmpty) {
+                          _result.clear();
+                        }
                         calculateResult();
                       } else {
                         snacker.showError("Ensure all fields are filled.");
@@ -172,11 +184,11 @@ class _CalculatePageState extends State<CalculatePage> {
                     },
                   ),
                   Visibility(
-                    visible: (_result.length > 1),
+                    visible: (_result.isNotEmpty),
                     child: ShareButton(onPressed: shareResult),
                   ),
                   Visibility(
-                    visible: (_result.length > 1),
+                    visible: (_result.isNotEmpty),
                     child: SaveButton(onPressed: saveResult),
                   ),
                   /*Visibility(

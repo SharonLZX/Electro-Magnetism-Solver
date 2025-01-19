@@ -1,6 +1,6 @@
 import '../../core/constants/constants.dart';
 
-class SubscriptManager {
+class Subscript {
   List<String> subscriptFormatting(List<String> result) {
     List<String> formattedResult = [];
     
