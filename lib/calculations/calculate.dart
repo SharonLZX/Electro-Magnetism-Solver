@@ -1,8 +1,7 @@
+import 'package:math_expressions/math_expressions.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/calculations/integration.dart';
 import 'package:electro_magnetism_solver/utils/formatters/exp_to_latex.dart';
-import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
 
 class Calculate {
   Integration integrationHandler = Integration();

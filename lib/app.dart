@@ -1,7 +1,5 @@
-import 'package:electro_magnetism_solver/features/presentations/page/calculate_page.dart';
-import 'package:electro_magnetism_solver/features/presentations/page/history_page.dart';
-
 import 'package:flutter/material.dart';
+import 'package:electro_magnetism_solver/features/presentations/page/calculate_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:electro_magnetism_solver/utils/forms.dart';
 import 'package:electro_magnetism_solver/calculations/calculate.dart';
@@ -10,7 +9,6 @@ import 'package:electro_magnetism_solver/utils/formatters/padded_forms.dart';
 import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
 import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_save.dart';
-import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_print.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_solve.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_share.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_drop_down.dart';
@@ -47,7 +45,7 @@ class _CalculatePageState extends State<CalculatePage> {
 
   void calculateResult() {
     String areaElm = "";
-    String _resStr = "";
+    String resStr = "";
     List<String> result = [];
 
     if (selectedFormula == formulaList[0]) {
@@ -68,13 +66,13 @@ class _CalculatePageState extends State<CalculatePage> {
           magField, fieldDir, surfArea, surfDir, areaElm);
       _result = subscriptHandler.subscriptFormatting(result);
     } else if (selectedFormula == formulaList[1]) {
-      String chgFlux = controllers['dFlux']?.text ?? '0'; 
+      String chgFlux = controllers['dFlux']?.text ?? '0';
       _result.add('E = - dΦB/dt');
-      _resStr = calcHandler.inducedEMFLoop(chgFlux);
-      if (_resStr == "0"){
+      resStr = calcHandler.inducedEMFLoop(chgFlux);
+      if (resStr == "0") {
         _result.add("Unable\ to\ compute\ complex\ equation.");
-      }else{
-        _result.add(_resStr);
+      } else {
+        _result.add(resStr);
       }
     }
 
