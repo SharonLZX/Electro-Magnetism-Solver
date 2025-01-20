@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
 
 class ResultList extends StatefulWidget {
   final List<String> result;
@@ -24,8 +23,7 @@ class _ResultListState extends State<ResultList> {
             color: index.isEven ? Colors.grey[300] : Colors.grey[350],
             child: ListTile(
               title: Text("Step $index"),
-              //subtitle: Text(widget.result[index]),
-              subtitle: Math.tex(r'\text{${widget.result[index]}}'),
+              subtitle: Text(widget.result[index]),
             ));
       },
     );

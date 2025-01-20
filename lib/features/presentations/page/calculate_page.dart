@@ -45,7 +45,7 @@ class _CalculatePageState extends State<CalculatePage> {
 
   void calculateResult() {
     String areaElm = "";
-    String resStr = "";
+    dynamic resStr = [];
     List<String> result = [];
 
     if (selectedFormula == formulaList[0]) {
@@ -69,10 +69,10 @@ class _CalculatePageState extends State<CalculatePage> {
       String chgFlux = controllers['dFlux']?.text ?? '0';
       _result.add('E = - dΦB/dt');
       resStr = calcHandler.inducedEMFLoop(chgFlux);
-      if (resStr == "0") {
-        _result.add("Unable\ to\ compute\ complex\ equation.");
+      if (resStr == null) {
+        _result.add("Can't compute");
       } else {
-        _result.add(resStr);
+        _result.add(resStr.toString());
       }
     }
 
