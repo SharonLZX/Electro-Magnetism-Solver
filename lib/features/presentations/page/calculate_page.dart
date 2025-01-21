@@ -1,3 +1,4 @@
+import 'package:electro_magnetism_solver/features/presentations/widgets/chkbox_chainrule.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:electro_magnetism_solver/utils/forms.dart';
@@ -28,6 +29,7 @@ class _CalculatePageState extends State<CalculatePage> {
     'planeInput': TextEditingController()
   };
   late final WidgetFactory widgetFactory;
+  bool isChecked = false;
 
   List<String> _result = [];
   List<String> questionBank = [];
@@ -36,6 +38,8 @@ class _CalculatePageState extends State<CalculatePage> {
   DBHandler dbHandler = DBHandler();
   Calculate calcHandler = Calculate();
   Subscript subscriptHandler = Subscript();
+
+  TextEditingController chainRuleCntrl = TextEditingController();
 
   void buildEditor() {
     for (var input in inputs) {
@@ -97,21 +101,6 @@ class _CalculatePageState extends State<CalculatePage> {
     await dbHandler.insertResult(resMap);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    buildEditor();
-    widgetFactory = WidgetFactory(controllers);
-  }
-
-  @override
-  void dispose() {
-    controllers.forEach((key, controller) {
-      controller.dispose();
-    });
-    super.dispose();
-  }
-
   bool isCntrlFilled() {
     String? plane = controllers['P']?.text;
     String? magField = controllers['B']?.text;
@@ -129,6 +118,31 @@ class _CalculatePageState extends State<CalculatePage> {
     } else {
       return (chgFlux!.isNotEmpty);
     }
+  }
+  
+  void handleCheckboxChange(bool? value) {
+    setState(() {
+      isChecked = value ?? false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    buildEditor();
+    widgetFactory = WidgetFactory(controllers);
+    chainRuleCntrl.addListener((){
+          debugPrint("ChainRuleCntrl updated: ${chainRuleCntrl.text}");
+    });
+  }
+
+  @override
+  void dispose() {
+    controllers.forEach((key, controller) {
+      controller.dispose();
+    });
+    chainRuleCntrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -165,6 +179,10 @@ class _CalculatePageState extends State<CalculatePage> {
                 paddedForm(
                     widgetFactory.customForm, 3, chgMagFluxHint, 'dFlux'),
               ],
+              ChkboxChainrule(
+                  onChecked: handleCheckboxChange,
+                  value: isChecked,
+                  textController: chainRuleCntrl),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
