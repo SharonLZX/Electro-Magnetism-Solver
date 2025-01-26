@@ -19,6 +19,11 @@ dependencies:
   flutter_screenutil: ^5.9.3
   sqflite: ^2.4.1
   path: ^1.9.0
+  flutter_echarts: ^2.5.0
+  webview_flutter: ^4.10.0
+  webview_flutter_wkwebview: ^3.17.0
+  util_simple_3d: ^11.0.0
+  simple_3d_renderer: ^21.0.0
 
 dev_dependencies:
   flutter_test:

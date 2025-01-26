@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:window_size/window_size.dart';
 import 'package:electro_magnetism_solver/app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 void setupWindow(){
   if (kIsWeb){
@@ -19,5 +21,6 @@ Future<void> main() async{
   setupWindow();
   dbhandler.openDB();
   await ScreenUtil.ensureScreenSize();
+  WebViewPlatform.instance = AndroidWebViewPlatform();
   runApp(const MyApp());
 }

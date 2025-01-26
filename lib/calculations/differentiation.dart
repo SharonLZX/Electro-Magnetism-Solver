@@ -1,84 +1,99 @@
+import 'dart:math';
 
-import 'package:electro_magnetism_solver/core/constants/constants.dart';
+import 'package:electro_magnetism_solver/utils/helpers.dart/coefficient_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:electro_magnetism_solver/core/constants/constants.dart';
 
 class Differentiate {
-  String differentiate(String eqn) {
-    var resultOfSplit = splitCoefficient(eqn);
-    var coeff = resultOfSplit[0];
-    eqn = resultOfSplit[1];
-    debugPrint(coeff);
-    debugPrint(eqn);
-    if (eqn.contains("^")) {
-      List<int> powLst = [];
-      powLst = powerRule(eqn);
-      debugPrint(powLst.toString());
-      if (powLst[1] == 0){
-        eqn = "0";
-      }else if (powLst[1] == 1){
-        eqn = "${(int.parse(coeff)*2)}x";
-      }else{
-        eqn = "${int.parse(coeff)*powLst[0]}x^${powLst[1]}";
+  String differentiate(String equation) {
+    CoefficientHandler coefficientHandler = CoefficientHandler();
+
+    List<String> updatedEquation = [];
+    List<String>? coefficientList = [];
+    String pow = "";
+    String base = "";
+    String newPow = "";
+    String derivative = "";
+    String variable = "";
+    String newCoefficient = "";
+    bool trigoFunc = false;
+
+    if (equation.contains("^")) {
+      updatedEquation = powerRule(equation);
+
+      base = updatedEquation[0];
+      pow = updatedEquation[1];
+      newPow = updatedEquation[2];
+
+      debugPrint(base);
+      debugPrint(pow);
+      debugPrint(newPow);
+
+      if (pow == "0") {
+        return "0";
       }
-    }else{
-      if (eqn == ""){
-        // Special case: dy/dx constant
-        eqn = "0";
-      }else{
-        eqn = coeff;
+
+      if (newPow == "0") {
+        return "1";
       }
-      
+
+      if (newPow == "1") {
+        newPow = "";
+      }
+    } else {
+      base = equation;
     }
 
-    if (eqn.contains("sin")){
-      eqn = sinRule();
-    }else if (eqn.contains("cos")){
-      eqn = cosRule();
+    coefficientList = coefficientHandler.extractCoefficient(base);
+    if (coefficientList == null) {
+      variable = base;
+    } else {
+      if (equation.contains("^")) {
+        newCoefficient =
+            (int.parse(pow) * int.parse(coefficientList[0])).toString();
+      } else {
+        newCoefficient = coefficientList[0];
+      }
+      variable = coefficientList[1];
     }
 
-    if (eqn.contains("ln")){
-      eqn = lnRule();
+    debugPrint(newCoefficient);
+
+    if (variable.contains("sin")) {
+      derivative = sinRule();
+      trigoFunc = true;
+    } else if (variable.contains("cos")) {
+      derivative = cosRule();
+      derivative = "-$derivative";
+      trigoFunc = true;
+    } else if (base.contains("ln")) {
+      derivative = lnRule();
+    } else {
+      derivative = variable;
     }
 
-    return eqn;
+    if (newPow == "" && equation.contains("^")) {
+      return '$newCoefficient$derivative';
+    } else if (newPow == "" && !equation.contains("^") && !trigoFunc) {
+      return newCoefficient;
+    } else if (!equation.contains("^") && trigoFunc) {
+      return '$newCoefficient$derivative';
+    } else {
+      return '$newCoefficient$derivative^$newPow';
+    }
   }
 
-  List<String> splitCoefficient(String eqn){
-    final regex = coefficientRegEx;
-    final match = regex.firstMatch(eqn);
-    if (match != null){
-      String coefficient = match.group(1) ?? '1';
-      String variable = match.group(2) ?? '';
-      if (coefficient == '+' || coefficient == '-'){
-        coefficient += '1';
-      }
-      return [coefficient, variable];
-    }
-    return [eqn, ''];
-  }
-
-  List<int> powerRule(String eqn) {
-    int exponent = 0;
-    int expMinus1 = 0;
-    List<int> expLst = [];
-
-    RegExp regExp = RegExp(r'\^(\d+)');
-    Match? match = regExp.firstMatch(eqn);
-
-    if (match == null) {
-      expLst.add(0);
-      return expLst;
-    }
-
-    exponent = int.parse(match.group(1)!);
-    expMinus1 = exponent - 1;
-    expLst.add(exponent);
-    expLst.add(expMinus1);
-    return expLst;
+  List<String> powerRule(String equation) {
+    List<String> splitEquation = equation.split("^");
+    splitEquation.removeWhere((element) => element == "^");
+    String base = splitEquation[0];
+    String power = splitEquation[1];
+    String newPower = (int.parse(power) - 1).toString();
+    return [base, power, newPower];
   }
 
   String cosRule() {
-    return ("-sin(x)");
+    return ("sin(x)");
   }
 
   String sinRule() {

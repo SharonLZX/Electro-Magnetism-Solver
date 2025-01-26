@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  file_state_manager:
+    dependency: transitive
+    description:
+      name: file_state_manager
+      sha256: "19ae8a33cf3bf6a9890f7819757531d5840fa6d8bf3a4be2fb89e94e9e5e3304"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   fixnum:
     dependency: transitive
     description:
@@ -118,6 +126,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_echarts:
+    dependency: "direct main"
+    description:
+      name: flutter_echarts
+      sha256: "1102f0f82d3ca6025cf700d345ecc8c15c8bab38f5315dd2dcb67ecdb3fe3d91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -172,10 +188,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
+      sha256: fe7ab022b76f3034adc518fb6ea04a82387620e19977665ea18d30a1cf43442f
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.3.0"
   http_parser:
     dependency: transitive
     description:
@@ -376,6 +392,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.2"
+  simple_3d:
+    dependency: transitive
+    description:
+      name: simple_3d
+      sha256: "6e13eeb7c4dc4b3faf19e5e07bf79269e59d9a8cf496a6f202d0afd0aa05d471"
+      url: "https://pub.dev"
+    source: hosted
+    version: "15.0.0"
+  simple_3d_renderer:
+    dependency: "direct main"
+    description:
+      name: simple_3d_renderer
+      sha256: "149e989b27bc78f880ba450d672a9952785046caa4f998671904ac39122a47fa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -533,6 +565,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
+  util_simple_3d:
+    dependency: "direct main"
+    description:
+      name: util_simple_3d
+      sha256: "7f25a0554f3a6da7a52cde8d5c9f722b41e46b3f918b111eda8ce9b59f96f9a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.0.0"
   uuid:
     dependency: transitive
     description:
@@ -589,6 +629,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      sha256: "889a0a678e7c793c308c68739996227c9661590605e70b1f6cf6b9a6634f7aec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.10.0"
+  webview_flutter_android:
+    dependency: transitive
+    description:
+      name: webview_flutter_android
+      sha256: "5568f17a9c25c0fdd0737900fa1c2d1fee2d780bc212d9aec10c2d1f48ef0f59"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.1"
+  webview_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: webview_flutter_platform_interface
+      sha256: d937581d6e558908d7ae3dc1989c4f87b786891ab47bb9df7de548a151779d8d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.10.0"
+  webview_flutter_wkwebview:
+    dependency: "direct main"
+    description:
+      name: webview_flutter_wkwebview
+      sha256: "4adc14ea9a770cc9e2c8f1ac734536bd40e82615bd0fa6b94be10982de656cc7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.17.0"
   win32:
     dependency: transitive
     description:

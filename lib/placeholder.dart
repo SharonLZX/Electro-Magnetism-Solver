@@ -69,15 +69,15 @@ class Differentiation {
 class DiffRule{
   String ruleHandler(String eqn){
     if (eqn.contains("^")){
-      List<int> pow_lst = [];
+      List<int> powLst = [];
 
-      pow_lst = powRule(eqn);
-      if (pow_lst[1] == 0){
+      powLst = powRule(eqn);
+      if (powLst[1] == 0){
         eqn = "0";
-      }else if (pow_lst[1] == 1){
+      }else if (powLst[1] == 1){
         eqn = "2x";
       }else{
-        eqn = "${pow_lst[0]}x^${pow_lst[1]}";
+        eqn = "${powLst[0]}x^${powLst[1]}";
       }
     }
 
@@ -95,22 +95,22 @@ class DiffRule{
 
   List<int> powRule(String eqn){
     int pow = 0;
-    int pow_minus_1 = 0;
-    List<int> pow_lst = [];
+    int powMinus1 = 0;
+    List<int> powLst = [];
 
     RegExp regExp = RegExp(r'\^(\d+)');
     Match? match = regExp.firstMatch(eqn);
 
     if(match!=null){
       pow = int.parse(match.group(1)!);
-      pow_minus_1 = pow-1;
+      powMinus1 = pow-1;
 
-      pow_lst.add(pow);
-      pow_lst.add(pow_minus_1);
+      powLst.add(pow);
+      powLst.add(powMinus1);
     }else{
-      pow_lst.add(0);
+      powLst.add(0);
     }
-    return pow_lst;
+    return powLst;
   }
 
   String cosRule(){

@@ -1,3 +1,5 @@
+import 'package:electro_magnetism_solver/features/presentations/page/graph_page.dart';
+import 'package:electro_magnetism_solver/features/presentations/page/history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:electro_magnetism_solver/features/presentations/page/calculate_page.dart';
 
@@ -55,8 +57,10 @@ class _AppPageState extends State<AppPage> {
         ),
         body: IndexedStack(
           index: currentPageIndex,
-          children: const <Widget>[
-            CalculatePage(),
+          children: <Widget>[
+            const CalculatePage(),
+            const HistoryPage(),
+            GraphPage(),
           ],
         ));
   }

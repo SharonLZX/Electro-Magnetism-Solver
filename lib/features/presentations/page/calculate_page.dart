@@ -1,7 +1,7 @@
 import 'package:electro_magnetism_solver/features/presentations/widgets/chkbox_chainrule.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:electro_magnetism_solver/utils/forms.dart';
+import 'package:electro_magnetism_solver/utils/formatters/forms.dart';
 import 'package:electro_magnetism_solver/calculations/calculate.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
@@ -72,7 +72,7 @@ class _CalculatePageState extends State<CalculatePage> {
     } else if (selectedFormula == formulaList[1]) {
       String chgFlux = controllers['dFlux']?.text ?? '0';
       _result.add('E = - dΦB/dt');
-      resStr = calcHandler.inducedEMFLoop(chgFlux);
+      resStr = calcHandler.induceEMFLoop(chgFlux);
       if (resStr == null) {
         _result.add("Can't compute");
       } else {

@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/utils/formatters/differentiate_handler.dart';
+import 'package:electro_magnetism_solver/utils/helpers.dart/differentiate_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
@@ -56,26 +56,8 @@ class Calculate {
     return false;
   }
 
-  dynamic inducedEMFLoop(String chgFlux) {
-    List<String> arith = ["+", "-"];
-    List<String> eqnSplitted = [];
-
+  dynamic induceEMFLoop(String chgFlux){
     DiffHandler diffHandler = DiffHandler();
-
-    bool arithCheck = arith.any((arith) => chgFlux.contains(arith));
-    for (var symb in arith){
-      if (chgFlux.contains(symb)){
-        eqnSplitted = chgFlux.split(symb);
-        eqnSplitted.removeWhere((elm) => elm == symb);
-        debugPrint(eqnSplitted.toString());
-        return diffHandler.diffHandler(eqnSplitted).join(symb);
-      }
-    }
-
-    if (!arithCheck){
-      eqnSplitted.add(chgFlux);
-      return diffHandler.diffHandler(eqnSplitted).join("");
-    }
-    return null;
+    return diffHandler.diffHandler(chgFlux);
   }
 }

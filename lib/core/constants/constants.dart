@@ -13,7 +13,7 @@ final List<RegExp> regexList = [
   RegExp(r'^[a-zA-Z0-9+\-*/%=()^]+$'),
 ];
 
-final RegExp coefficientRegEx = RegExp(r'^([+-]?\d*)(x(?:\^\d+)?)?$');
+final RegExp coefficientRegEx = RegExp(r'([-+]?\d+)\s*([a-zA-Z]+\(x\)|x)');
 
 final List<String> superscriptDigits = [
   '⁰',
