@@ -119,7 +119,7 @@ class _CalculatePageState extends State<CalculatePage> {
       return (chgFlux!.isNotEmpty);
     }
   }
-  
+
   void handleCheckboxChange(bool? value) {
     setState(() {
       isChecked = value ?? false;
@@ -131,8 +131,8 @@ class _CalculatePageState extends State<CalculatePage> {
     super.initState();
     buildEditor();
     widgetFactory = WidgetFactory(controllers);
-    chainRuleCntrl.addListener((){
-          debugPrint("ChainRuleCntrl updated: ${chainRuleCntrl.text}");
+    chainRuleCntrl.addListener(() {
+      debugPrint("ChainRuleCntrl updated: ${chainRuleCntrl.text}");
     });
   }
 
