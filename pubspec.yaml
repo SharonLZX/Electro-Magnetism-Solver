@@ -24,7 +24,6 @@ dependencies:
   webview_flutter_wkwebview: ^3.17.0
   util_simple_3d: ^11.0.0
   simple_3d_renderer: ^21.0.0
-  flutter_scene: ^0.7.0-0
 
 dev_dependencies:
   flutter_test:
