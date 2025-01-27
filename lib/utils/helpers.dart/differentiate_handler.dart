@@ -1,5 +1,4 @@
 import 'package:electro_magnetism_solver/calculations/differentiation.dart';
-import 'package:flutter/material.dart';
 
 class DiffHandler {
   dynamic diffHandler(String chgFlux) {
@@ -29,7 +28,7 @@ class DiffHandler {
       for (int i = 0; i < finalResult.length; i += 2) {
         pairs.add("${finalResult[i]}*${finalResult[i + 1]}");
       }
-      
+
       if (chgFlux.contains('/')) {
         return ("[${pairs.join('-')}]/${splitEquation[1]}^2");
       } else {

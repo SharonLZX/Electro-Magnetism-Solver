@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:electro_magnetism_solver/utils/helpers.dart/coefficient_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:electro_magnetism_solver/core/constants/constants.dart';
 
 class Differentiate {
   String differentiate(String equation) {
