@@ -4,7 +4,6 @@ import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/coefficient_
 import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/exponent_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/is_numeric_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/replace_x_helper.dart';
-import 'package:flutter/material.dart';
 
 class Differentiate {
   String? differentiate(String equation) {
