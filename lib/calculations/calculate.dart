@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/utils/helpers.dart/differentiate_handler.dart';
+import 'package:electro_magnetism_solver/utils/helpers.dart/differentiation/differentiation_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
@@ -58,6 +58,7 @@ class Calculate {
 
   dynamic induceEMFLoop(String chgFlux){
     DiffHandler diffHandler = DiffHandler();
-    return diffHandler.diffHandler(chgFlux);
+    String result = diffHandler.diffHandler(chgFlux);
+    return result;
   }
 }
