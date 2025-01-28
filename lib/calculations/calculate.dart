@@ -56,7 +56,7 @@ class Calculate {
     return false;
   }
 
-  dynamic induceEMFLoop(String chgFlux){
+  dynamic induceEMFLoop(String chgFlux) {
     DiffHandler diffHandler = DiffHandler();
     String result = diffHandler.diffHandler(chgFlux);
     return result;
