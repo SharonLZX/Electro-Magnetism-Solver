@@ -58,9 +58,9 @@ class _AppPageState extends State<AppPage> {
         body: IndexedStack(
           index: currentPageIndex,
           children: const <Widget>[
+            GraphPage(),
             CalculatePage(),
             HistoryPage(),
-            GraphPage()
           ],
         ));
   }

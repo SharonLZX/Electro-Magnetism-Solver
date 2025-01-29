@@ -23,26 +23,45 @@ class _GraphPageState extends State<GraphPage> {
     super.initState();
     objs = UtilSp3dCommonParts.coordinateArrows(300); // Create XYZ arrows
 
-    Sp3dObj arrow_inverse_x = UtilSp3dGeometry.cone(10, 20);
+    Sp3dObj arrow_inverse_x = UtilSp3dGeometry.cone(5, 10);
     arrow_inverse_x.materials[0] = FSp3dMaterial.grey.deepCopy()
       ..strokeColor = const Color.fromARGB(255, 255, 0, 0);
     arrow_inverse_x.rotate(Sp3dV3D(0, 1, 0), -90 * 3.14 / 180);
     arrow_inverse_x.move(Sp3dV3D(-300, 0, 0));
     objs.add(arrow_inverse_x);
 
-    Sp3dObj arrow_inverse_y = UtilSp3dGeometry.cone(10, 20);
+    Sp3dObj pillar_inverse_x = UtilSp3dGeometry.pillar(2, 2, 300);
+    pillar_inverse_x.materials[0] = FSp3dMaterial.grey.deepCopy()
+      ..strokeColor = Color.fromARGB(255, 255, 0, 0);
+    pillar_inverse_x.rotate(Sp3dV3D(0, 1, 0), -90 * 3.14 / 180);
+        objs.add(pillar_inverse_x);
+
+
+    Sp3dObj arrow_inverse_y = UtilSp3dGeometry.cone(5, 10);
     arrow_inverse_y.materials[0] = FSp3dMaterial.grey.deepCopy()
       ..strokeColor = const Color.fromARGB(255, 55, 255, 0);
     arrow_inverse_y.rotate(Sp3dV3D(-1, 0, 0), -90 * 3.14 / 180);
     arrow_inverse_y.move(Sp3dV3D(0, -300, 0));
     objs.add(arrow_inverse_y);
 
-    Sp3dObj arrow_inverse_z = UtilSp3dGeometry.cone(10, 20);
+    Sp3dObj pillar_inverse_y = UtilSp3dGeometry.pillar(2, 2, 300);
+    pillar_inverse_y.materials[0] = FSp3dMaterial.grey.deepCopy()
+      ..strokeColor = Color.fromARGB(255, 55, 255, 0);
+    pillar_inverse_y.rotate(Sp3dV3D(-1, 0, 0), -90 * 3.14 / 180);
+        objs.add(pillar_inverse_y);
+
+    Sp3dObj arrow_inverse_z = UtilSp3dGeometry.cone(5, 10);
     arrow_inverse_z.materials[0] = FSp3dMaterial.grey.deepCopy()
       ..strokeColor = const Color.fromARGB(255, 0, 47, 255);
-    arrow_inverse_z.rotate(Sp3dV3D(0, 0, 1), 180 * 3.14 / 180);
+    arrow_inverse_z.rotate(Sp3dV3D(0, 0, 0), 180 * 3.14 / 180);
     arrow_inverse_z.move(Sp3dV3D(0, 0, -300));
     objs.add(arrow_inverse_z);
+
+    Sp3dObj pillar_inverse_z = UtilSp3dGeometry.pillar(2, 2, 300);
+    pillar_inverse_z.materials[0] = FSp3dMaterial.grey.deepCopy()
+      ..strokeColor = const Color.fromARGB(255, 0, 47, 255);
+    pillar_inverse_z.rotate(Sp3dV3D(0, 0, 0), 180 * 3.14 / 180);
+        objs.add(pillar_inverse_z);
 
     Sp3dObj cube = UtilSp3dGeometry.cube(250, 5, 300, 1, 1, 1);
     cube.materials[0] = FSp3dMaterial.grey.deepCopy()
