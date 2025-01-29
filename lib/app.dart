@@ -45,10 +45,10 @@ class _AppPageState extends State<AppPage> {
               icon: Icon(Icons.home_outlined),
               label: 'Home',
             ),
-            NavigationDestination(
+            /*NavigationDestination(
               icon: Icon(Icons.view_list),
               label: 'History',
-            ),
+            ),*/
             NavigationDestination(
               icon: Icon(Icons.ssid_chart),
               label: 'Graph',
@@ -58,9 +58,8 @@ class _AppPageState extends State<AppPage> {
         body: IndexedStack(
           index: currentPageIndex,
           children: const <Widget>[
-            GraphPage(),
             CalculatePage(),
-            HistoryPage(),
+            GraphPage(),
           ],
         ));
   }

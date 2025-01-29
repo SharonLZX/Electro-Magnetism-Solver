@@ -4,6 +4,7 @@ import 'package:electro_magnetism_solver/utils/helpers/coefficient_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/exponent_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/is_numeric_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/replace_x_helper.dart';
+import 'package:flutter/material.dart';
 
 class Differentiate {
   String? differentiate(String equation) {
@@ -150,13 +151,14 @@ class Differentiate {
         if (requireChain == true) {
           //Since there is a coefficient, we need to make
           //sure that the $dervChain multiplys with $coefficient
-          
+
           if (dervChain != null) {
             //We assume the dervChain will always be <number> followed
             //by a 'x' so we removeLast() to remove the x, to get the
             //<numbers> to get the new multiplied number.
 
             var dervChainLst = dervChain.split('');
+            
             for (var item in dervChainLst) {
               if (item == 'x') {
                 break;
@@ -169,7 +171,12 @@ class Differentiate {
             if (dervChainStr.contains('x')) {
               return "$newEquation$variable";
             }
-            return "${newEquation}x$variable";
+
+            if (dervChainLst.contains('^')) {
+              return "${newEquation}x^${dervChainLst.last}$variable";
+            } else {
+              return "${newEquation}x$variable";
+            }
           }
         }
         //Q-type: d/dx 5sin(x)

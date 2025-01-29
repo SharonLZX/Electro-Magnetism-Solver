@@ -4,14 +4,14 @@ import 'package:electro_magnetism_solver/utils/formatters/forms.dart';
 import 'package:electro_magnetism_solver/calculations/calculate.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
-import 'package:electro_magnetism_solver/utils/formatters/subscripts.dart';
+import 'package:electro_magnetism_solver/utils/helpers/subscript_helper.dart';
 import 'package:electro_magnetism_solver/utils/formatters/padded_forms.dart';
 import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
 import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
-import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_save.dart';
-import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_solve.dart';
-import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_share.dart';
-import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_drop_down.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/buttons/bttn_save.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/buttons/bttn_solve.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/buttons/bttn_share.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/buttons/bttn_drop_down.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/list_view_result.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/chkbox_chainrule.dart';
 
@@ -195,17 +195,20 @@ class _CalculatePageState extends State<CalculatePage> {
                 paddedForm(
                     widgetFactory.customForm, 3, chgMagFluxHint, 'dFlux'),
               ],
-              ChkboxChainrule(
-                  onChecked: handleCheckboxChange,
-                  value: isChecked,
-                  textController: chainRuleCntrl),
+              Visibility(
+                visible: !selectedFormula.contains('EMF'),
+                child: ChkboxChainrule(
+                    onChecked: handleCheckboxChange,
+                    value: isChecked,
+                    textController: chainRuleCntrl),
+              ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SolveButton(
                     onPressed: () {
-
+                  
                       // Checks if all fields are filled before calculating.
                       if (isCntrlFilled()) {
                         snacker.showSuccess("Calculating...");
