@@ -1,4 +1,3 @@
-import 'package:electro_magnetism_solver/features/presentations/widgets/chkbox_chainrule.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:electro_magnetism_solver/utils/formatters/forms.dart';
@@ -14,6 +13,7 @@ import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_sol
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_share.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/bttn_drop_down.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/list_view_result.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/chkbox_chainrule.dart';
 
 class CalculatePage extends StatefulWidget {
   const CalculatePage({super.key});
@@ -28,6 +28,7 @@ class _CalculatePageState extends State<CalculatePage> {
     'directionInput': TextEditingController(),
     'planeInput': TextEditingController()
   };
+
   late final WidgetFactory widgetFactory;
   bool isChecked = false;
 
@@ -63,14 +64,19 @@ class _CalculatePageState extends State<CalculatePage> {
         surfArea = "";
       }
 
+
+      // Adds the question to the question bank, which is used for storing into database.
       questionBank.addAll([plane, magField, surfArea, fieldDir, surfDir]);
 
       areaElm = calcHandler.planeFormatting(plane);
       result = calcHandler.magFlxIntgSymb(
           magField, fieldDir, surfArea, surfDir, areaElm);
+
       _result = subscriptHandler.subscriptFormatting(result);
+
     } else if (selectedFormula == formulaList[1]) {
       String chgFlux = controllers['dFlux']?.text ?? '0';
+      
       _result.add('E = - dΦB/dt');
       resStr = calcHandler.induceEMFLoop(chgFlux);
       if (resStr == null) {
@@ -78,6 +84,7 @@ class _CalculatePageState extends State<CalculatePage> {
       } else {
         _result.add(resStr.toString());
       }
+
     }
 
     setState(() {
@@ -129,8 +136,14 @@ class _CalculatePageState extends State<CalculatePage> {
   @override
   void initState() {
     super.initState();
+
+    // Builds the relevant text controllers for the input fields.
     buildEditor();
+
+    // Instantiates the widget factory.
     widgetFactory = WidgetFactory(controllers);
+
+    // Listens to the chain rule checkbox controller.
     chainRuleCntrl.addListener(() {
       debugPrint("ChainRuleCntrl updated: ${chainRuleCntrl.text}");
     });
@@ -158,6 +171,7 @@ class _CalculatePageState extends State<CalculatePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // CustomDropDown is a custom widget that displays a dropdown
               CustomDropDown(
                   onChanged: (String? newValue) {
                     setState(() {
@@ -169,6 +183,8 @@ class _CalculatePageState extends State<CalculatePage> {
                     });
                   },
                   selectedFormula: selectedFormula),
+
+              // The following code block is a conditional statement that displays the input fields.
               if (selectedFormula == formulaList[0]) ...[
                 paddedForm(widgetFactory.customForm, 0, planeHint, 'P'),
                 paddedForm(widgetFactory.customForm, 2, magFieldHint, 'B'),
@@ -183,11 +199,14 @@ class _CalculatePageState extends State<CalculatePage> {
                   onChecked: handleCheckboxChange,
                   value: isChecked,
                   textController: chainRuleCntrl),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SolveButton(
                     onPressed: () {
+
+                      // Checks if all fields are filled before calculating.
                       if (isCntrlFilled()) {
                         snacker.showSuccess("Calculating...");
                         if (_result.isNotEmpty) {
@@ -199,20 +218,24 @@ class _CalculatePageState extends State<CalculatePage> {
                       }
                     },
                   ),
+
                   Visibility(
                     visible: (_result.isNotEmpty),
                     child: ShareButton(onPressed: shareResult),
                   ),
+
                   Visibility(
                     visible: (_result.isNotEmpty),
                     child: SaveButton(onPressed: saveResult),
                   ),
+
                   /*Visibility(
                     visible: (_result.length > 1),
                     child: PrintButton(onPressed: printResult),
                   ),*/
                 ],
               ),
+
               SizedBox(
                   width: screenWidth - 10,
                   height: (_result.length * 70),

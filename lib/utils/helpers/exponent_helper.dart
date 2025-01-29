@@ -5,7 +5,13 @@ class ExponentHandler {
     String exponent = "";
 
     if (equation.contains("^")) {
-      // ERROR: cos(x^2) will also return TRUE
+
+      //Example: equation = 5sin(x)^2
+      //splitEquation: [5sin(x), ^, 2]
+      //splitEquation: [5sin(x), 2]
+
+      //coeffVar: short form for coefficient and variable
+      //exponent: short form for exponent
       splitEquation = equation.split("^");
       splitEquation.removeWhere((element) => element == "^");
       coeffVar = splitEquation[0];

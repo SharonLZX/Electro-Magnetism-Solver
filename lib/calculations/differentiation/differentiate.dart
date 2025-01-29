@@ -1,9 +1,9 @@
-import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/rules_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/chain_rule_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/coefficient_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/exponent_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/is_numeric_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers.dart/helpers/replace_x_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/rules_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/chain_rule_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/coefficient_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/exponent_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/is_numeric_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/replace_x_helper.dart';
 
 class Differentiate {
   String? differentiate(String equation) {
@@ -25,35 +25,44 @@ class Differentiate {
     bool containTrigo = false;
     bool requireChain = false;
 
-    String? dervSub = ""; //Contains the derivative AFTER substituition
-    
+    String? dervChain = ""; //Contains the derivative AFTER chain rule
+
     String finalCoeff = "";
     dynamic deriveThis; //We need this to rebuild the function later on
-    dynamic newVariable; //This will contain the newVariable, e.g. sin(5x) will be sin(x)
+    dynamic
+        newVariable; //This will contain the newVariable, e.g. sin(5x) will be sin(x)
     List<String>? coeffVarList = [];
 
-    //Check if require substituition
-    var subStatus = chainHandler.extractSub(equation);
-    if (subStatus != null && subStatus != false) {
-      deriveThis = subStatus[0];
-      newVariable = subStatus[1];
-      dervSub = differentiate(deriveThis);
+    //Check if require chain rule (36-48)
+    var chainStatus = chainHandler.extractChain(equation);
+    if (chainStatus != null && chainStatus != false) {
+      deriveThis = chainStatus[0]; //'x^2'
+      newVariable = chainStatus[1]; //'sin(x)'
+      dervChain = differentiate(
+          deriveThis); // dervChain contains the derivative of 'x^2'
       requireChain = true;
     }
 
     if (requireChain) {
+      // Replace x in sin(x) with x^2, to bring back original equation.
       var newEquation = equation.replaceFirst(deriveThis, 'x');
-      equation = newEquation;
+      equation = newEquation; // TODO: MAYBE CAN REMOVE THIS LINE
+
+      // MISUNDERSTANDING:
+      // sin(x^2) doesn't contain exponent, but sin(x)^2 does.
       coeffVarList = exponentHandler.containsExp(newEquation);
-      } else {
+    } else {
       //Check if contains exponent
       coeffVarList = exponentHandler.containsExp(equation);
     }
 
+    //Check if contains exponent (51-63)
     if (coeffVarList != null) {
       containExpo = true;
       coeffVar = coeffVarList[0];
       exponent = coeffVarList[1];
+
+      //Check if coefficient exists
       coeffVarList =
           coefficientHandler.extractCoefficient(coeffVar); //Reuse the list
     } else {
@@ -63,7 +72,7 @@ class Differentiate {
       coeffVarList = coefficientHandler.extractCoefficient(equation);
     }
 
-    //Check if contain coefficient
+    //Check if contain coefficient (65-77)
     if (coeffVarList != null) {
       containCoeff = true;
       coefficient = coeffVarList[0];
@@ -94,7 +103,7 @@ class Differentiate {
     if (variable.contains('sin')) {
       containTrigo = true;
       variable = diffRulesHandler.sinRule(); //Simply overwrite the variable.
-    }else if (variable.contains('cos')) {
+    } else if (variable.contains('cos')) {
       containTrigo = true;
       variable = diffRulesHandler.cosRule();
     }
@@ -112,43 +121,52 @@ class Differentiate {
     }
 
     if (requireChain == true) {
-      variable = replaceX.replaceX(variable, deriveThis);
+      variable = replaceX.replaceX(
+          variable, deriveThis); //TODO: replaced already above?
     }
 
     if (containCoeff == false && containExpo == false) {
       coefficient = "1";
       if (containTrigo) {
+        // No coefficient, no exponent, but contains trigo
         if (requireChain == true) {
-          return "$dervSub$variable";
+          // If chain rules has been performed
+          // Then we need to display the derived value first
+          // e.g. sin(x^2) => 2x * cos(x^2)
+          return "$dervChain$variable";
         }
 
-        //Q-type: d/dx sin(x)
+        //Q-type: d/dx sin(x) or cos(x), without chain rule
         return variable;
       }
+
+      //Q-type: d/dx ln(x)
       return "1/x";
     }
 
     if (containCoeff == true && containExpo == false) {
+      // Q-type: 5cos(x) or 5x^2
       if (containTrigo) {
         if (requireChain == true) {
           //Since there is a coefficient, we need to make
-          //sure that the $dervSub multiplys with $coefficient
-          if (dervSub != null) {
-            //We assume the dervSub will always be <number> followed
+          //sure that the $dervChain multiplys with $coefficient
+          
+          if (dervChain != null) {
+            //We assume the dervChain will always be <number> followed
             //by a 'x' so we removeLast() to remove the x, to get the
             //<numbers> to get the new multiplied number.
 
-            var dervSubLst = dervSub.split('');
-            for (var item in dervSubLst){
-              if (item == 'x'){
+            var dervChainLst = dervChain.split('');
+            for (var item in dervChainLst) {
+              if (item == 'x') {
                 break;
               }
               finalCoeff = finalCoeff + item.toString();
             }
             var newEquation = int.parse(coefficient) * int.parse(finalCoeff);
 
-            String dervSubStr = dervSubLst[0];
-            if (dervSubStr.contains('x')) {
+            String dervChainStr = dervChainLst[0];
+            if (dervChainStr.contains('x')) {
               return "$newEquation$variable";
             }
             return "${newEquation}x$variable";

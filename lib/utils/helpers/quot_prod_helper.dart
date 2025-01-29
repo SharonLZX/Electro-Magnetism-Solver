@@ -1,9 +1,9 @@
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
-import 'package:electro_magnetism_solver/utils/helpers.dart/differentiation/differentiation_handler_2.dart';
+import 'package:electro_magnetism_solver/utils/handlers/differentiation_handler_2.dart';
 
 class QuotProdRule {
   String quotProdRule(String chgFlux) {
-      DiffHandler2 diffHandler2 = DiffHandler2();
+    DiffHandler2 diffHandler2 = DiffHandler2();
 
 
     List<String> pairs = [];
