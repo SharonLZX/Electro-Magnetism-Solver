@@ -40,7 +40,7 @@ class _ChkboxChainruleState extends State<ChkboxChainrule> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          const Text('Use Chain Rule'),
+          const Text('Use Substituition Rule'),
           Checkbox(
             value: widget.value,
             onChanged: widget.onChecked,

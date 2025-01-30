@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_3d/simple_3d.dart';
 import 'package:util_simple_3d/util_simple_3d.dart';
-import 'package:simple_3d_renderer/simple_3d_renderer.dart';
 
 class PlaneObj {
   // X-axis: 1, Y-axis: 2, Z-axis: 3
@@ -15,7 +14,7 @@ class PlaneObj {
 
   List<Sp3dObj> objLst = [
     UtilSp3dGeometry.cube(250,5,250,1,1,1),
-    UtilSp3dGeometry.cube(250,5,250,1,1,1),
+    UtilSp3dGeometry.cube(0,5,0,1,1,1),
     UtilSp3dGeometry.cube(0,5,0,1,1,1),
   ];
 

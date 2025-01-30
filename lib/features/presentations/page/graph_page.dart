@@ -1,5 +1,6 @@
 import 'package:electro_magnetism_solver/features/presentations/widgets/3d%20objects/arrows.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/3d%20objects/planes.dart';
+import 'package:electro_magnetism_solver/features/presentations/widgets/legend.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_3d/simple_3d.dart';
 import 'package:util_simple_3d/util_simple_3d.dart';
@@ -25,7 +26,7 @@ class _GraphPageState extends State<GraphPage> {
     AxisObj axisObj = AxisObj();
     PlaneObj planeObj = PlaneObj();
     objs = UtilSp3dCommonParts.coordinateArrows(300);
-    for (int i = 0; i<3; i++){
+    for (int i = 0; i < 3; i++) {
       objs.add(axisObj.createArrow(i));
       objs.add(axisObj.createPillar(i));
       objs.add(planeObj.createPlanes(i));
@@ -46,6 +47,7 @@ class _GraphPageState extends State<GraphPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    LegendBuilder legendBuilder = LegendBuilder();
 
     // Adjust camera position based on zoom level (distance from the scene)
     Sp3dCamera camera = Sp3dCamera(
@@ -83,80 +85,37 @@ class _GraphPageState extends State<GraphPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Axis Legend",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold)),
+                  legendBuilder.axisBuilder(),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              color: const Color.fromARGB(
-                                  255, 255, 0, 0), // X axis color
-                            ),
-                          ),
-                          Text("X Axis", style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              color: const Color.fromARGB(
-                                  255, 0, 255, 0), // Y axis color
-                            ),
-                          ),
-                          Text("Y Axis", style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              color: const Color.fromARGB(
-                                  255, 0, 0, 255), // Z axis color
-                            ),
-                          ),
-                          Text("Z Axis", style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
+                      legendBuilder.axisLegend(0),
+                      legendBuilder.axisLegend(1),
+                      legendBuilder.axisLegend(2),
                     ],
                   ),
                   SizedBox(
                     height: 10,
                   ),
+                  //TODO: Can use the zoomBuilder class
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text("Zoom Level: ${zoomLevel.toStringAsFixed(2)}",
                           style: TextStyle(color: Colors.white)),
-                          Slider(
-                    value: zoomLevel * -1,
-                    min: -2.5, // Minimum zoom level (zoom out)
-                    max: -0.5, // Maximum zoom level (zoom in)
-                    onChanged: (double value) {
-                      setState(() {
-                        zoomLevel = value * -1;
-                      });
-                    },
-                  ),
+                      Slider(
+                        value: zoomLevel * -1,
+                        min: -2.5, // Minimum zoom level (zoom out)
+                        max: -0.5, // Maximum zoom level (zoom in)
+                        onChanged: (double value) {
+                          setState(() {
+                            zoomLevel = value * -1;
+                          });
+                        },
+                      ),
                     ],
                   ),
-                  
                 ],
               ),
             ),

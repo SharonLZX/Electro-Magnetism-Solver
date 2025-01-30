@@ -4,7 +4,6 @@ import 'package:electro_magnetism_solver/utils/helpers/coefficient_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/exponent_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/is_numeric_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/replace_x_helper.dart';
-import 'package:flutter/material.dart';
 
 class Differentiate {
   String? differentiate(String equation) {
@@ -36,6 +35,7 @@ class Differentiate {
 
     //Check if require chain rule (36-48)
     var chainStatus = chainHandler.extractChain(equation);
+
     if (chainStatus != null && chainStatus != false) {
       deriveThis = chainStatus[0]; //'x^2'
       newVariable = chainStatus[1]; //'sin(x)'
@@ -47,7 +47,7 @@ class Differentiate {
     if (requireChain) {
       // Replace x in sin(x) with x^2, to bring back original equation.
       var newEquation = equation.replaceFirst(deriveThis, 'x');
-      equation = newEquation; // TODO: MAYBE CAN REMOVE THIS LINE
+      equation = newEquation;
 
       // MISUNDERSTANDING:
       // sin(x^2) doesn't contain exponent, but sin(x)^2 does.
@@ -158,7 +158,7 @@ class Differentiate {
             //<numbers> to get the new multiplied number.
 
             var dervChainLst = dervChain.split('');
-            
+
             for (var item in dervChainLst) {
               if (item == 'x') {
                 break;
@@ -201,18 +201,26 @@ class Differentiate {
       return "$exponent$variable^$derExpo";
     }
 
-    int newCoeff = int.parse(exponent) * int.parse(coefficient);
-    if (derExpo == "0") {
-      //Q-type: d/dx 5x^1
-      return "0";
-    }
+    if (containCoeff = true && containExpo == true) {
+      int newCoeff = int.parse(exponent) * int.parse(coefficient);
+        if (derExpo == "0") {
+          //Q-type: d/dx 5x^1
+          return "0";
+        }
 
-    //Q-type: d/dx 5x^0
-    if (derExpo == "1") {
-      return "$newCoeff$variable";
-    }
+        //Q-type: d/dx 5x^0
+        if (derExpo == "1") {
+          return "$newCoeff$variable";
+        }
 
-    //Q-typy: d/dx 5x^2
-    return "$newCoeff$variable^$derExpo";
+        //Q-typy: d/dx 5x^2
+        return "$newCoeff$variable^$derExpo";
+      }
+      if (requireChain) {
+        //Q-type: d/dx 5sin(3x^3)^3
+        
+      } else {
+        
+    }
   }
 }
