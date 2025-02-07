@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/calculations/differentiation/differentiate.dart';
+import 'package:electro_magnetism_solver/calculations/differentiate.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify_helper.dart';
 
 class DiffHandler2 {
