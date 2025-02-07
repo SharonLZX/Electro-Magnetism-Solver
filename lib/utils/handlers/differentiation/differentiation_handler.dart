@@ -1,7 +1,7 @@
 import 'package:electro_magnetism_solver/utils/helpers/quot_prod_helper.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify_helper.dart';
-import 'package:electro_magnetism_solver/utils/handlers/differentiation_handler_2.dart';
+import 'package:electro_magnetism_solver/utils/handlers/differentiation/differentiation_handler_2.dart';
 
 class DiffHandler {
   dynamic diffHandler(String chgFlux) {

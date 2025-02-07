@@ -1,5 +1,9 @@
+import 'package:electro_magnetism_solver/utils/helpers/implicit/add_coefficient_one.dart';
+import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_one.dart';
+import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_zero.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_parents.dart';
+import 'package:flutter/material.dart';
 
 class Simplification {
   String simplify(String function) {
@@ -136,5 +140,79 @@ class Simplification {
     }
 
     return lstFinalResult.join('');
+  }
+
+  String combineLikeTerms(String function) {
+    /*
+    Essentially we will combine all the values with same exponent together.
+    We will use the help of a dictionary.
+    */
+
+    // Splits where there is an arithmetic
+    bool boolContainAdd = false;
+    List<String> lstFunction = [];
+    if (function.contains('+')) {
+      boolContainAdd = true;
+      lstFunction = function.split('+');
+    } else {
+      lstFunction = function.split('-');
+    }
+
+    /* 
+    In the case where the user puts '5(t^2+3)+t(t)+3t', where the last 3t,
+    is also considered a constant and will not be 3t^1. So let's call a 
+    friend.
+    */
+    AddCoefficientOne addCoefficientOne = AddCoefficientOne();
+    AddExponentOne addExponentOne = AddExponentOne();
+    AddExponentZero addExponentZero = AddExponentZero();
+    for (int i = 0; i < lstFunction.length; i++) {
+      String? updatedFunc = addCoefficientOne.addCoefficientOne(lstFunction[i]);
+      updatedFunc = addExponentOne.addExponentOne(updatedFunc);
+      updatedFunc = addExponentZero.addExponentZero(updatedFunc);
+      if (updatedFunc != null) {
+        lstFunction[i] = updatedFunc;
+      }
+    }
+
+    debugPrint(lstFunction.toString());
+
+    // Add them into a dictionary, those with same exponent will go together
+    Map<int, List<int>> groupedTerms = {};
+    for (String? term in lstFunction) {
+      if (term != null && term.isNotEmpty) {
+        List<String> parts = term.split("t^");
+        int coefficient = int.parse(parts[0]);
+        int exponent = int.parse(parts[1]);
+        groupedTerms.putIfAbsent(exponent, () => []);
+        groupedTerms[exponent]!.add(coefficient);
+      }
+    }
+
+    // Sum of all the list<int> together
+    Map<int, int> updatedTerms = {};
+    groupedTerms.forEach((exponent, coefficients) {
+      if (coefficients.length > 1) {
+        updatedTerms[exponent] = coefficients.reduce((a, b) => a + b);
+      } else {
+        updatedTerms[exponent] = coefficients[0];
+      }
+    });
+
+    // Convert dict<int, int> to <int>t^<int>, and remove redundant exponents
+    List<String> formattedTerms = updatedTerms.entries.map((entry) {
+      if (entry.key == 0) {
+        return "${entry.value}";
+      } else if (entry.key == 1) {
+        return "${entry.value}t";
+      }
+      return "${entry.value}t^${entry.key}";
+    }).toList();
+
+    // Join the terms with " + "
+    if (boolContainAdd) {
+      return formattedTerms.join('+');
+    }
+    return formattedTerms.join('-');
   }
 }
