@@ -20,7 +20,13 @@ class TermWise {
         String coefficient = match.group(1)!.isEmpty ? '1' : match.group(1)!;
         String key =
             match.group(2)!; // Variable part (e.g., sin(t), cos(t)sin(t))
-
+        
+        // If we don't have this bool check, then we'll remove away cos, sin,
+        // ln's brackets.
+        bool containsTrigOrLn(String key) => RegExp(r'(sin|cos|ln)').hasMatch(key);
+        if (containsTrigOrLn == false){
+          key = key.replaceAll(RegExp(r'[()]'), '');
+        }
         groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
       }
     }

@@ -199,9 +199,11 @@ class Simplification {
     // Convert dict<int, int> to <int>t^<int>, and remove redundant exponents
     List<String> formattedTerms = updatedTerms.entries.map((entry) {
       if (entry.key == 0) {
-        return "${entry.value}";
+        return "${entry.value}t^0";
+        //return "${entry.value}";
       } else if (entry.key == 1) {
-        return "${entry.value}t";
+        return "${entry.value}t^1";
+        //return "${entry.value}t";
       }
       return "${entry.value}t^${entry.key}";
     }).toList();

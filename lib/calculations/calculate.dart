@@ -70,20 +70,28 @@ class Calculate {
     Substituition substituition = Substituition();
     mapTermWise = substituition.substitued(mapTermWise);
 
-    
     String result;
-    List<String> lstDifferentiate = [];
+    List<String> lstSubstitute = [];
     Simplification simplification = Simplification();
     mapTermWise.forEach((key, valueList) {
       result = simplification.simplify(valueList.join(''));
       result = simplification.combineLikeTerms(result);
-      lstDifferentiate.add(result.replaceAll('t', key));
+      lstSubstitute.add(result.replaceAll('t', key));
     });
 
-    debugPrint(lstDifferentiate.toString());
+    for (int i = 0; i < lstSubstitute.length; i++) {
+      if (lstSubstitute[i].contains(')(')) {
+        lstSubstitute[i] = lstSubstitute[i].replaceAll(')(', ')*(');
+      }
+    }
 
+    debugPrint(lstSubstitute.toString());
+
+    // TODO: Assuming all plus, which is wrong.
+    String postSubstitution = lstSubstitute.join('+');
+    return postSubstitution;
 
     DiffHandler diffHandler = DiffHandler();
-    return diffHandler.diffHandler(lstDifferentiate.join(''));
+    return diffHandler.diffHandler(postSubstitution);
   }
 }

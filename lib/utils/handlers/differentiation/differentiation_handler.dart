@@ -7,7 +7,6 @@ class DiffHandler {
   dynamic diffHandler(String chgFlux) {
     //DiffHandler handles whether the equation falls
     //under either the product or quotient rule.
-
     Simplification simplifyHandler = Simplification();
     QuotProdRule quotProdRule = QuotProdRule();
     DiffHandler2 diffHandler2 = DiffHandler2();
