@@ -79,16 +79,16 @@ class Calculate {
       lstSubstitute.add(result.replaceAll('t', key));
     });
 
+    // Insert a * if there is a product rule.
     for (int i = 0; i < lstSubstitute.length; i++) {
       if (lstSubstitute[i].contains(')(')) {
         lstSubstitute[i] = lstSubstitute[i].replaceAll(')(', ')*(');
       }
     }
 
-    debugPrint(lstSubstitute.toString());
-
     // TODO: Assuming all plus, which is wrong.
     String postSubstitution = lstSubstitute.join('+');
+    debugPrint(lstSubstitute.toString());
     return postSubstitution;
 
     DiffHandler diffHandler = DiffHandler();
