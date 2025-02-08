@@ -98,7 +98,6 @@ class _CalculatePageState extends State<CalculatePage> {
 
   void printResult() async {
     final List<Result> storedresult = await dbHandler.retrieveResult();
-    debugPrint(storedresult.join());
   }
 
   void saveResult() async {
@@ -145,7 +144,6 @@ class _CalculatePageState extends State<CalculatePage> {
 
     // Listens to the chain rule checkbox controller.
     chainRuleCntrl.addListener(() {
-      debugPrint("ChainRuleCntrl updated: ${chainRuleCntrl.text}");
     });
   }
 

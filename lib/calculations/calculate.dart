@@ -1,5 +1,7 @@
 import 'package:electro_magnetism_solver/calculations/simplification.dart';
 import 'package:electro_magnetism_solver/utils/handlers/differentiation/differentiation_handler.dart';
+import 'package:electro_magnetism_solver/utils/helpers/substituition/substituition.dart';
+import 'package:electro_magnetism_solver/utils/helpers/term_wise/term_wise.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
@@ -58,13 +60,30 @@ class Calculate {
   }
 
   dynamic induceEMFLoop(String chgFlux) {
-    Simplification simplification = Simplification();
-    String result = simplification.simplify(chgFlux);
-    result = simplification.combineLikeTerms(result);
-    
-
     // Induced EMF in a loop is given by E = -dΦB/dt
+
+    // Splits the terms,
+    TermWise termWise = TermWise();
+    Map<String, List<String>> mapTermWise = termWise.termWise(chgFlux);
+
+    // Substitution complex terms like 5sin(t^3) to 5t
+    Substituition substituition = Substituition();
+    mapTermWise = substituition.substitued(mapTermWise);
+
+    
+    String result;
+    List<String> lstDifferentiate = [];
+    Simplification simplification = Simplification();
+    mapTermWise.forEach((key, valueList) {
+      result = simplification.simplify(valueList.join(''));
+      result = simplification.combineLikeTerms(result);
+      lstDifferentiate.add(result.replaceAll('t', key));
+    });
+
+    debugPrint(lstDifferentiate.toString());
+
+
     DiffHandler diffHandler = DiffHandler();
-    return diffHandler.diffHandler(result);
+    return diffHandler.diffHandler(lstDifferentiate.join(''));
   }
 }

@@ -17,7 +17,6 @@ class Simplification {
 
     bool expandPosiOne = false;
     lstExtArith = extractArithmetic.extractArithmetic(function);
-
     for (int i = 0; i < lstExtArith.length; i++) {
       String? function = lstExtArith[i];
       if (function == null) {
@@ -174,8 +173,6 @@ class Simplification {
         lstFunction[i] = updatedFunc;
       }
     }
-
-    debugPrint(lstFunction.toString());
 
     // Add them into a dictionary, those with same exponent will go together
     Map<int, List<int>> groupedTerms = {};

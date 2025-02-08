@@ -30,6 +30,7 @@ class Expansion {
     Simply algebra here 
     (5t^0) * (1t^1) = (5*1)t^(0+1)
     */
+    
     int coeffMultiplier = int.parse(lstCoeffExponMultArg[0]);
     int exponMultiplier = int.parse(lstCoeffExponMultArg[1]);
     int coeffArgument = int.parse(lstCoeffExponMultArg[2]);
