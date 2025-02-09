@@ -173,7 +173,7 @@ class Simplification {
         lstFunction[i] = updatedFunc;
       }
     }
-
+    
     // Add them into a dictionary, those with same exponent will go together
     Map<int, List<int>> groupedTerms = {};
     for (String? term in lstFunction) {

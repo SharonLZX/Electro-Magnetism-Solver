@@ -243,6 +243,7 @@ class _CalculatePageState extends State<CalculatePage> {
                   child: ResultList(
                     result: _result,
                   )),
+              Text("Constants not allowed to plus each other (e.g. 5 + 6)")
             ],
           ),
         ),

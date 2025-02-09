@@ -50,6 +50,3 @@ const String chgMagFluxHint = 'dΦB (Change in Magnetic Flux in Weber)';
 const String chgTimeHint = 'dt (Change in Time in seconds)';
 const List<String> arithOper1 = ["/", "*"];
 const List<String> arithOper2 = ["+", "-"];
-
-
-

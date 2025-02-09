@@ -5,7 +5,7 @@ class ExtractArithmetic {
     // Splits function at points where there are brackets, + or -.
     RegExp regExp = RegExp(r'([a-zA-Z0-9]+|[+\-*/^=])|\([^)]*\)');
     Iterable<Match> matches = regExp.allMatches(func);
-    matches.map((match){
+    matches.map((match) {
       return match.group(0);
     });
     return matches.map((match) {
@@ -19,7 +19,7 @@ class ExtractArithmetic {
     But not if they are within brackets.
     */
 
-    RegExp regExp = RegExp(r'([+\-]?\d*\.*\d*[a-zA-Z]*(?:\([^\(\)]+\))?)');
+    RegExp regExp = RegExp(r'([^\(\)\+\-\*/^]+(?:\([^\(\)]+\))?(?:\^?\d*)?)');
     Iterable<Match> matches = regExp.allMatches(func);
     return matches
         .map((match) => match.group(0)!.trim())
@@ -34,6 +34,6 @@ class ExtractArithmetic {
     */
     RegExp regExp = RegExp(r'\(([^()]*)\)');
     Match? match = regExp.firstMatch(func);
-    return match != null ? match.group(1):null;
+    return match != null ? match.group(1) : null;
   }
 }
