@@ -3,7 +3,6 @@ import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_one
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_zero.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_parents.dart';
-import 'package:flutter/material.dart';
 
 class Simplification {
   String simplify(String function) {
@@ -165,6 +164,7 @@ class Simplification {
     AddCoefficientOne addCoefficientOne = AddCoefficientOne();
     AddExponentOne addExponentOne = AddExponentOne();
     AddExponentZero addExponentZero = AddExponentZero();
+
     for (int i = 0; i < lstFunction.length; i++) {
       String? updatedFunc = addCoefficientOne.addCoefficientOne(lstFunction[i]);
       updatedFunc = addExponentOne.addExponentOne(updatedFunc);
@@ -199,11 +199,11 @@ class Simplification {
     // Convert dict<int, int> to <int>t^<int>, and remove redundant exponents
     List<String> formattedTerms = updatedTerms.entries.map((entry) {
       if (entry.key == 0) {
-        return "${entry.value}t^0";
-        //return "${entry.value}";
+        //return "${entry.value}t^0";
+        return "${entry.value}";
       } else if (entry.key == 1) {
-        return "${entry.value}t^1";
-        //return "${entry.value}t";
+        //return "${entry.value}t^1";
+        return "${entry.value}t";
       }
       return "${entry.value}t^${entry.key}";
     }).toList();

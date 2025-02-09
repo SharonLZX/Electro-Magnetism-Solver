@@ -1,4 +1,4 @@
-class Simplification {
+class Simplification_mini {
   dynamic simplify(String? result) {
     if (result != null && result.contains('-')) {
       result = result.replaceFirst('-', '');

@@ -78,7 +78,7 @@ class _CalculatePageState extends State<CalculatePage> {
       String chgFlux = controllers['dFlux']?.text ?? '0';
       
       _result.add('E = - dΦB/dt');
-      resStr = calcHandler.induceEMFLoop(chgFlux);
+      resStr = calcHandler.inducedEMFLoop(chgFlux);
       if (resStr == null) {
         _result.add("Can't compute");
       } else {

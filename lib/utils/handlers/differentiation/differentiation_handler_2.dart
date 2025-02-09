@@ -11,7 +11,7 @@ class DiffHandler2 {
     List<String> arithOper2 = ["-", "+"];
 
     Differentiate differentiate = Differentiate();
-    Simplification simplifyHandler = Simplification();
+    Simplification_mini simplifyHandler = Simplification_mini();
 
     bool arithCheck = arithOper2.any((arith) => equation.contains(arith));
     if (!arithCheck) {

@@ -1,8 +1,4 @@
-import 'package:electro_magnetism_solver/calculations/simplification.dart';
-import 'package:electro_magnetism_solver/utils/handlers/differentiation/differentiation_handler.dart';
-import 'package:electro_magnetism_solver/utils/helpers/substituition/substituition.dart';
-import 'package:electro_magnetism_solver/utils/helpers/term_wise/term_wise.dart';
-import 'package:flutter/material.dart';
+import 'package:electro_magnetism_solver/utils/handlers/simplify/simplify.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/calculations/integration.dart';
@@ -59,39 +55,15 @@ class Calculate {
     return false;
   }
 
-  dynamic induceEMFLoop(String chgFlux) {
+  
+
+  dynamic inducedEMFLoop(String chgFlux) {
     // Induced EMF in a loop is given by E = -dΦB/dt
 
-    // Splits the terms,
-    TermWise termWise = TermWise();
-    Map<String, List<String>> mapTermWise = termWise.termWise(chgFlux);
-
-    // Substitution complex terms like 5sin(t^3) to 5t
-    Substituition substituition = Substituition();
-    mapTermWise = substituition.substitued(mapTermWise);
-
-    String result;
-    List<String> lstSubstitute = [];
-    Simplification simplification = Simplification();
-    mapTermWise.forEach((key, valueList) {
-      result = simplification.simplify(valueList.join(''));
-      result = simplification.combineLikeTerms(result);
-      lstSubstitute.add(result.replaceAll('t', key));
-    });
-
-    // Insert a * if there is a product rule.
-    for (int i = 0; i < lstSubstitute.length; i++) {
-      if (lstSubstitute[i].contains(')(')) {
-        lstSubstitute[i] = lstSubstitute[i].replaceAll(')(', ')*(');
-      }
-    }
-
-    // TODO: Assuming all plus, which is wrong.
-    String postSubstitution = lstSubstitute.join('+');
-    debugPrint(lstSubstitute.toString());
+    SimplifyHandler simplifyHandler = SimplifyHandler();
+    String postSubstitution = simplifyHandler.simplifyHandler(chgFlux);
     return postSubstitution;
-
-    DiffHandler diffHandler = DiffHandler();
-    return diffHandler.diffHandler(postSubstitution);
+    /*DiffHandler diffHandler = DiffHandler();
+    return diffHandler.diffHandler(postSubstitution);*/
   }
 }
