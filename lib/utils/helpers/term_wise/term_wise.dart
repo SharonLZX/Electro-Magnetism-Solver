@@ -1,4 +1,5 @@
 import 'package:electro_magnetism_solver/utils/handlers/simplify/simplify.dart';
+import 'package:electro_magnetism_solver/utils/helpers/expandable/expandable.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
 import 'package:flutter/material.dart';
 
@@ -17,12 +18,12 @@ class TermWise {
 
     ExtractArithmetic extractArithmetic = ExtractArithmetic();
     //List<String> lstSplit = extractArithmetic.extractArithmetic2(wholeEquation);
-    
-RegExp regExp = RegExp(r'(?=[+\-](?![^\(\)]*\)))');
+
+    RegExp regExp = RegExp(r'(?=[+\-](?![^\(\)]*\)))');
     List<String> lstSplit = wholeEquation.split(regExp);
     for (String term in lstSplit) {
       term = term.trim();
-      
+
       /* Skip empty terms */
       if (term.isEmpty) continue;
 
@@ -40,8 +41,11 @@ RegExp regExp = RegExp(r'(?=[+\-](?![^\(\)]*\)))');
         term = term.replaceAll(innerTerms, simplifiedTerm);
       }
 
+      Expandable expandable = Expandable();
       /* Regex to extract coefficient and variable part */
-RegExp regex = RegExp(r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');      Match? match = regex.firstMatch(term);
+      RegExp regex = RegExp(
+          r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
+      Match? match = regex.firstMatch(term);
 
       if (match != null) {
         String key = match.group(2)!;
