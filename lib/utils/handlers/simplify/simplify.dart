@@ -1,14 +1,9 @@
 import 'package:electro_magnetism_solver/calculations/simplification.dart';
 import 'package:electro_magnetism_solver/utils/helpers/substituition/substituition.dart';
 import 'package:electro_magnetism_solver/utils/helpers/term_wise/term_wise.dart';
-import 'package:flutter/material.dart';
 
 class SimplifyHandler {
   dynamic simplifyHandler(String chgFlux) {
-    // Splits the terms,
-    // TODO: Since we're splitting the terms, we can't yet identify
-    // constants that are numerical meaning 5t(5t+6+4).
-
     TermWise termWise = TermWise();
     Map<String, List<String>> mapTermWise = termWise.termWise(chgFlux);
 
@@ -20,12 +15,21 @@ class SimplifyHandler {
     List<String> lstSubstitute = [];
     Simplification simplification = Simplification();
     mapTermWise.forEach((key, valueList) {
+      /*
+      Since now all our values are t, see substitued line 26-28.
+      we can run the valueList through our simplify.
+
+      But simplifiying, we may have new like terms. So let's 
+      combine them together.
+
+      Lastly, replace all the 't' with the 'key'
+      */
       result = simplification.simplify(valueList.join(''));
       result = simplification.combineLikeTerms(result);
       lstSubstitute.add(result.replaceAll('t', key));
     });
 
-    // Insert a * if there is a product rule.
+    /* Insert a * if there is a product rule. */
     for (int i = 0; i < lstSubstitute.length; i++) {
       if (lstSubstitute[i].contains(')(')) {
         lstSubstitute[i] = lstSubstitute[i].replaceAll(')(', ')*(');
