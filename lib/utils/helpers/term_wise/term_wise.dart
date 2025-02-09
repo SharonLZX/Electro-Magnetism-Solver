@@ -1,38 +1,38 @@
 import 'package:electro_magnetism_solver/utils/handlers/simplify/simplify.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
+import 'package:flutter/material.dart';
 
 class TermWise {
   bool purelyNumerical(String eqn) {
-    return RegExp(r'^\d+$').hasMatch(eqn);
+    return RegExp(r'^\d+(\.\d+)?$').hasMatch(eqn); // Supports decimals too
   }
 
   dynamic termWise(String? wholeEquation) {
     Map<String, List<String>> groupedTerms = {};
 
-    /*If empty equation */
+    /* If empty equation */
     if (wholeEquation == null || wholeEquation.isEmpty) {
       return {};
     }
 
     ExtractArithmetic extractArithmetic = ExtractArithmetic();
-    List<String> lstSplit = extractArithmetic.extractArithmetic2(wholeEquation);
+    //List<String> lstSplit = extractArithmetic.extractArithmetic2(wholeEquation);
+    
+RegExp regExp = RegExp(r'(?=[+\-](?![^\(\)]*\)))');
+    List<String> lstSplit = wholeEquation.split(regExp);
     for (String term in lstSplit) {
       term = term.trim();
-      /*If empty equation, start next iteration.*/
+      
+      /* Skip empty terms */
       if (term.isEmpty) continue;
 
-      /* Since purley numerical, no point to do anything about it. */
-      if (purelyNumerical(term) == true) {
+      /* If purely numerical, no need to process further */
+      if (purelyNumerical(term)) {
         groupedTerms.putIfAbsent(term, () => []).add(term);
         continue;
       }
 
-      /* 
-      Not null means, there is a inner term. Like, 5t(5t+3),
-      5t+3 is the inner term. So if there is an inner term,
-      we must attempt to simplify that term first, before 
-      continuing with our main simplification.
-      */
+      /* Handle inner grouped terms first */
       String? innerTerms = extractArithmetic.extractGroupedTerm(term);
       if (innerTerms != null && innerTerms != 't') {
         SimplifyHandler simplifyHandler = SimplifyHandler();
@@ -40,34 +40,23 @@ class TermWise {
         term = term.replaceAll(innerTerms, simplifiedTerm);
       }
 
-      /*
-      Essentially, this part, we are trying to create a dictionary, that will
-      store all the like terms together.
-      
-      Example:
-      {x: [3x, +4x], 
-      sin(t): [-5sin(t), +7sin(t)],
-      cos(t)sin(t): [+2cos(t)sin(t)]}
-      */
-      RegExp regex = RegExp(r'^([+\-]?\d*\.*\d*)([a-zA-Z()^0-9]+.*)$');
-      Match? match = regex.firstMatch(term);
-      if (match != null) {
-        String key =
-            match.group(2)!; // Variable part (e.g., sin(t), cos(t)sin(t))
-        String coefficient = (match.group(1) == null || match.group(1)!.isEmpty)
-            ? "1"
-            : match.group(1)!;
+      /* Regex to extract coefficient and variable part */
+RegExp regex = RegExp(r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');      Match? match = regex.firstMatch(term);
 
-        /*
-        If we don't have this bool check, then we'll remove away cos, sin,
-        ln's brackets. 
-        */
+      if (match != null) {
+        String key = match.group(2)!;
+        String coefficient = match.group(1)!.isEmpty ? "1" : match.group(1)!;
+
+        /* Keep parentheses for functions like sin(t), cos(t), ln(t) */
         if (!RegExp(r'(sin|cos|ln)').hasMatch(key)) {
           key = key.replaceAll(RegExp(r'[()]'), '');
         }
+
         groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
       }
     }
+
+    debugPrint("groupedTerms: $groupedTerms");
     return groupedTerms;
   }
 }
