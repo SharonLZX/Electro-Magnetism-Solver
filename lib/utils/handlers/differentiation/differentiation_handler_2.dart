@@ -1,5 +1,5 @@
 import 'package:electro_magnetism_solver/calculations/differentiate.dart';
-import 'package:electro_magnetism_solver/utils/helpers/simplify_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/others/simplify_helper.dart';
 
 class DiffHandler2 {
   dynamic diffHandler2(String equation) {

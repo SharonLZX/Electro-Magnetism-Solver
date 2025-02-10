@@ -1,4 +1,4 @@
-import '../../core/constants/constants.dart';
+import '../../../core/constants/constants.dart';
 
 class Subscript {
   List<String> subscriptFormatting(List<String> result) {

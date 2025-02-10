@@ -1,9 +1,9 @@
-import 'package:electro_magnetism_solver/utils/helpers/rules_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/chain_rule_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/coefficient_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/exponent_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/is_numeric_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/replace_x_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/differentiation_rules/rules_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/differentiation_rules/chain_rule_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/others/coefficient_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/differentiation_rules/exponent_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/others/is_numeric_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/others/replace_x_helper.dart';
 
 class Differentiate {
   String? differentiate(String equation) {

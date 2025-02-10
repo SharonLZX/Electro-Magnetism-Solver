@@ -4,7 +4,7 @@ import 'package:electro_magnetism_solver/utils/helpers/formatters/forms.dart';
 import 'package:electro_magnetism_solver/calculations/calculate.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/subscript_helper.dart';
+import 'package:electro_magnetism_solver/utils/helpers/others/subscript_helper.dart';
 import 'package:electro_magnetism_solver/utils/helpers/formatters/padded_forms.dart';
 import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
 import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
