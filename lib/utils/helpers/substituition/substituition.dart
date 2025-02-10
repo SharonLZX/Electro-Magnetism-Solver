@@ -9,14 +9,8 @@ class Substituition {
       termWise sometimes have an additional '+' attached.
       So we need to include this check to remove the + or -.
       */
-      if (eqn.contains("+")) {
-        eqn = eqn.replaceAll('+', '');
-      } else if (eqn.contains("-")) {
-        eqn = eqn.replaceAll('-', '');
-      }
 
-      /* Returns a true if the equation is purely numerical. */
-      return RegExp(r'^\d+$').hasMatch(eqn);
+      return RegExp(r'^\d+(\.\d+)?$').hasMatch(eqn);
     }
 
     /*
@@ -28,6 +22,14 @@ class Substituition {
     */
     mapTermWise.forEach((key, valueList) {
       for (int i = 0; i < valueList.length; i++) {
+        if (valueList[i].contains('+')) {
+          valueList[i] = valueList[i].replaceAll('+', '');
+        }
+
+        if (valueList[i].contains('-')) {
+          valueList[i] = valueList[i].replaceAll('-', '');
+        }
+
         if (purelyNumerical(valueList[i]) == true) {
           continue;
         } else {

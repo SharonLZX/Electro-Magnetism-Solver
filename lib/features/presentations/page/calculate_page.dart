@@ -245,7 +245,7 @@ class _CalculatePageState extends State<CalculatePage> {
                   )),
               Text("Constants not allowed to add/subtract each other (e.g. 5 + 6)"),
               SizedBox(height:50),
-              Text("Problems that can't do yet: \n3t(3t), 3sin(t)cos(t)")
+              Text("Problems that can't do yet: \n3t(3t)")
             ],
           ),
         ),

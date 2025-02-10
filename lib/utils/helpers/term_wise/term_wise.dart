@@ -5,6 +5,19 @@ import 'package:flutter/material.dart';
 
 class TermWise {
   bool purelyNumerical(String eqn) {
+    /*
+    The reason for this is because if the constant, is
+    behind a variable (i.e. 5t+5), 'term' becomes, '+5'
+    which isn't 'purely' numerical. So we must remove it.
+    */
+    if (eqn.contains('+')){
+      eqn = eqn.replaceAll('+', '');
+    }
+
+    if (eqn.contains('-')){
+      eqn = eqn.replaceAll('-', '');
+    }
+
     return RegExp(r'^\d+(\.\d+)?$').hasMatch(eqn); // Supports decimals too
   }
 
@@ -41,7 +54,7 @@ class TermWise {
         term = term.replaceAll(innerTerms, simplifiedTerm);
       }
 
-      Expandable expandable = Expandable();
+      //Expandable expandable = Expandable();
       /* Regex to extract coefficient and variable part */
       RegExp regex = RegExp(
           r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
@@ -55,7 +68,6 @@ class TermWise {
         if (!RegExp(r'(sin|cos|ln)').hasMatch(key)) {
           key = key.replaceAll(RegExp(r'[()]'), '');
         }
-
         groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
       }
     }

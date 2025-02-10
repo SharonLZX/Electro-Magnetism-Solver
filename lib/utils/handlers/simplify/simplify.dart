@@ -8,14 +8,17 @@ class SimplifyHandler {
     TermWise termWise = TermWise();
     Map<String, List<String>> mapTermWise = termWise.termWise(chgFlux);
 
+    debugPrint(mapTermWise.toString());
+
     // Substitution complex terms like 5sin(t^3) to 5t
     Substituition substituition = Substituition();
-    mapTermWise = substituition.substitued(mapTermWise);
+    Map<String, List<String>> cleanMap = substituition.substitued(mapTermWise);
+    debugPrint(cleanMap.toString());
 
     String result;
     List<String> lstSubstitute = [];
     Simplification simplification = Simplification();
-    mapTermWise.forEach((key, valueList) {
+    cleanMap.forEach((key, valueList) {
       /*
       Since now all our values are t, see substitued line 26-28.
       we can run the valueList through our simplify.
@@ -25,7 +28,10 @@ class SimplifyHandler {
 
       Lastly, replace all the 't' with the 'key'
       */
-      result = simplification.simplify(valueList.join('+')); // TODO: Assuming all plus, which is wrong.
+      String newFunction = "${valueList.join("+")})";
+      result = simplification.simplify(newFunction); // TODO: Assuming all plus, which is wrong.
+      debugPrint(result);
+
       result = simplification.combineLikeTerms(result);
       lstSubstitute.add(result.replaceAll('t', key));
     });
@@ -36,6 +42,7 @@ class SimplifyHandler {
         lstSubstitute[i] = lstSubstitute[i].replaceAll(')(', ')*(');
       }
     }
+
     return lstSubstitute.join('+'); // TODO: Assuming all plus, which is wrong.
   }
 }
