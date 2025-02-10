@@ -10,11 +10,11 @@ class TermWise {
     behind a variable (i.e. 5t+5), 'term' becomes, '+5'
     which isn't 'purely' numerical. So we must remove it.
     */
-    if (eqn.contains('+')){
+    if (eqn.contains('+')) {
       eqn = eqn.replaceAll('+', '');
     }
 
-    if (eqn.contains('-')){
+    if (eqn.contains('-')) {
       eqn = eqn.replaceAll('-', '');
     }
 
@@ -27,6 +27,26 @@ class TermWise {
     /* If empty equation */
     if (wholeEquation == null || wholeEquation.isEmpty) {
       return {};
+    }
+
+    String removeBetween(
+      /*
+      Remove inbetween bracket to prevent 3t(3t)
+      from being read as 3t(3t) rather just read as
+      3t
+      */
+      String input,
+    ) {
+      if (!input.contains('(') || !input.contains(')')) {
+        return input; // Return unchanged if the delimiters are missing
+      }
+
+      String pattern = RegExp.escape('(') +
+          r'[^' +
+          RegExp.escape(')') +
+          r']*' +
+          RegExp.escape(')');
+      return input.replaceAll(RegExp(pattern), '');
     }
 
     ExtractArithmetic extractArithmetic = ExtractArithmetic();
@@ -58,21 +78,24 @@ class TermWise {
       /* Regex to extract coefficient and variable part */
       RegExp regex = RegExp(
           r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
+
+      String newTerm = removeBetween(term);
       Match? match = regex.firstMatch(term);
 
       if (match != null) {
         String key = match.group(2)!;
         String coefficient = match.group(1)!.isEmpty ? "1" : match.group(1)!;
 
-        /* Keep parentheses for functions like sin(t), cos(t), ln(t) */
-        if (!RegExp(r'(sin|cos|ln)').hasMatch(key)) {
-          key = key.replaceAll(RegExp(r'[()]'), '');
+        /* Ensure parentheses are preserved when part of an expression */
+        if (!RegExp(r'^(sin|cos|ln)\(.*\)$').hasMatch(key) &&
+            !key.contains('(')) {
+          key = key.replaceAll(RegExp(r'[()]'),
+              ''); // Remove only if it's NOT enclosing an expression
         }
         groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
       }
     }
 
-    debugPrint("groupedTerms: $groupedTerms");
     return groupedTerms;
   }
 }
