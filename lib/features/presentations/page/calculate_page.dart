@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:electro_magnetism_solver/utils/helpers/formatters/forms.dart';
 import 'package:electro_magnetism_solver/calculations/calculate.dart';
@@ -64,7 +65,6 @@ class _CalculatePageState extends State<CalculatePage> {
         surfArea = "";
       }
 
-
       // Adds the question to the question bank, which is used for storing into database.
       questionBank.addAll([plane, magField, surfArea, fieldDir, surfDir]);
 
@@ -73,10 +73,9 @@ class _CalculatePageState extends State<CalculatePage> {
           magField, fieldDir, surfArea, surfDir, areaElm);
 
       _result = subscriptHandler.subscriptFormatting(result);
-
     } else if (selectedFormula == formulaList[1]) {
       String chgFlux = controllers['dFlux']?.text ?? '0';
-      
+
       _result.add('E = - dΦB/dt');
       resStr = calcHandler.inducedEMFLoop(chgFlux);
       if (resStr == null) {
@@ -84,7 +83,6 @@ class _CalculatePageState extends State<CalculatePage> {
       } else {
         _result.add(resStr.toString());
       }
-
     }
 
     setState(() {
@@ -143,8 +141,7 @@ class _CalculatePageState extends State<CalculatePage> {
     widgetFactory = WidgetFactory(controllers);
 
     // Listens to the chain rule checkbox controller.
-    chainRuleCntrl.addListener(() {
-    });
+    chainRuleCntrl.addListener(() {});
   }
 
   @override
@@ -206,7 +203,6 @@ class _CalculatePageState extends State<CalculatePage> {
                 children: [
                   SolveButton(
                     onPressed: () {
-                  
                       // Checks if all fields are filled before calculating.
                       if (isCntrlFilled()) {
                         snacker.showSuccess("Calculating...");
@@ -219,12 +215,10 @@ class _CalculatePageState extends State<CalculatePage> {
                       }
                     },
                   ),
-
                   Visibility(
                     visible: (_result.isNotEmpty),
                     child: ShareButton(onPressed: shareResult),
                   ),
-
                   Visibility(
                     visible: (_result.isNotEmpty),
                     child: SaveButton(onPressed: saveResult),
@@ -243,9 +237,16 @@ class _CalculatePageState extends State<CalculatePage> {
                   child: ResultList(
                     result: _result,
                   )),
-              Text("Constants not allowed to add/subtract each other (e.g. 5 + 6)"),
-              SizedBox(height:50),
-              Text("Problems that can't do yet: \n3t(3t)")
+              Text("Problems that can't do yet:"),
+              SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Math.tex("n+n"),
+                  Math.tex("t^n(t+t)"),
+                  Math.tex("t(t+t^n)"),
+                ],
+              ),
             ],
           ),
         ),

@@ -39,6 +39,10 @@ class TermWise {
         return false; // Return unchanged if the delimiters are missing
       }
 
+      if (input.contains('sin') || input.contains('cos')){
+        return false;
+      }
+
       String pattern = RegExp.escape('(') +
           r'[^' +
           RegExp.escape(')') +
