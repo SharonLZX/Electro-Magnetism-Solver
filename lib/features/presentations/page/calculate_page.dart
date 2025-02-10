@@ -245,6 +245,7 @@ class _CalculatePageState extends State<CalculatePage> {
                   Math.tex("n+n"),
                   Math.tex("t^n(t+t)"),
                   Math.tex("t(t+t^n)"),
+                  //Goodnight
                 ],
               ),
             ],
