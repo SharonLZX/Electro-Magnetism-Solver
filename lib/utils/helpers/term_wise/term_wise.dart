@@ -1,5 +1,4 @@
 import 'package:electro_magnetism_solver/utils/handlers/simplify/simplify.dart';
-import 'package:electro_magnetism_solver/utils/helpers/expandable/expandable.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
 import 'package:flutter/material.dart';
 
@@ -106,6 +105,7 @@ class TermWise {
       groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
         }
 
+    debugPrint("groupedTerms: $groupedTerms");
     return groupedTerms;
   }
 }

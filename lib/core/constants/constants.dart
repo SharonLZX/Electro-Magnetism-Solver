@@ -14,7 +14,8 @@ final List<RegExp> regexList = [
 ];
 
 final RegExp coefficientRegEx = RegExp(r'([-+]?\d+)\s*([a-zA-Z]+\(x\)|x)');
-
+final RegExp hasParentheses = RegExp(r'\(.*?\)');
+final RegExp isTrigFunction = RegExp(r'\b(sin|cos)\s*\(.*?\)'); 
 final List<String> superscriptDigits = [
   '⁰',
   '¹',

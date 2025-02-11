@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/utils/handlers/expansion/implicit_exponent.dart';
+import 'package:electro_magnetism_solver/utils/handlers/multiplication/implicit_exponent.dart';
 
 class ExtractParents {
   String extractParents(String? multiplier, String argument) {

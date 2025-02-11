@@ -1,12 +1,12 @@
+import 'package:electro_magnetism_solver/utils/helpers/formatters/subscript_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:electro_magnetism_solver/utils/helpers/formatters/forms.dart';
-import 'package:electro_magnetism_solver/calculations/calculate.dart';
+import 'package:electro_magnetism_solver/utils/helpers/design/forms.dart';
+import 'package:electro_magnetism_solver/utils/handlers/calculation/calculate.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/others/subscript_helper.dart';
-import 'package:electro_magnetism_solver/utils/helpers/formatters/padded_forms.dart';
+import 'package:electro_magnetism_solver/utils/helpers/design/padded_forms.dart';
 import 'package:electro_magnetism_solver/features/auth/data/models/result_model.dart';
 import 'package:electro_magnetism_solver/features/presentations/snackbar/snackbar.dart';
 import 'package:electro_magnetism_solver/features/presentations/widgets/buttons/bttn_save.dart';
@@ -245,7 +245,7 @@ class _CalculatePageState extends State<CalculatePage> {
                   Math.tex("n+n"),
                   Math.tex("t^n(t+t)"),
                   Math.tex("t(t+t^n)"),
-                  //Goodnight
+                  Math.tex("nt(nt+n)"),
                 ],
               ),
             ],

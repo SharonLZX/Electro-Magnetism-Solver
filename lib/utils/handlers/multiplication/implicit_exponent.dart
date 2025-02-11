@@ -1,4 +1,4 @@
-import 'package:electro_magnetism_solver/utils/handlers/expansion/expansion.dart';
+import 'package:electro_magnetism_solver/utils/handlers/multiplication/multiplication.dart';
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_coefficient_one.dart';
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_one.dart';
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_zero.dart';
