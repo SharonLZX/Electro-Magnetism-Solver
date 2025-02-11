@@ -20,34 +20,39 @@ class TermWise {
     return RegExp(r'^\d+(\.\d+)?$').hasMatch(eqn); // Supports decimals too
   }
 
+  dynamic removeBetween(String input) {
+    /*
+    Remove inbetween bracket to prevent 3t(3t)
+    from being read as 3t(3t) rather just read as
+    3t
+    */
+    if (!input.contains('(') || !input.contains(')')) {
+      return false; // Return unchanged if the delimiters are missing
+    }
+
+    if (input.contains('sin') || input.contains('cos')) {
+      String tempInput = input.replaceAllMapped(RegExp(r'(sin|cos)\([^()]*\)'), (match) => '');
+      if (!tempInput.contains('(')) {
+        // 5sin(t) or 5cos(t) -> '5'
+        return false;
+      }
+    }
+
+    //TODO: CHANGE THIS TO SUIT 3t(3t) and 5t(5sin(t))
+    String pattern = RegExp.escape('(') +
+        r'[^' +
+        RegExp.escape(')') +
+        r']*' +
+        RegExp.escape(')');
+    return input.replaceAll(RegExp(pattern), '');
+  }
+
   dynamic termWise(String? wholeEquation) {
     Map<String, List<String>> groupedTerms = {};
 
     /* If empty equation */
     if (wholeEquation == null || wholeEquation.isEmpty) {
       return {};
-    }
-
-    dynamic removeBetween(String input) {
-      /*
-      Remove inbetween bracket to prevent 3t(3t)
-      from being read as 3t(3t) rather just read as
-      3t
-      */
-      if (!input.contains('(') || !input.contains(')')) {
-        return false; // Return unchanged if the delimiters are missing
-      }
-
-      if (input.contains('sin') || input.contains('cos')){
-        return false;
-      }
-
-      String pattern = RegExp.escape('(') +
-          r'[^' +
-          RegExp.escape(')') +
-          r']*' +
-          RegExp.escape(')');
-      return input.replaceAll(RegExp(pattern), '');
     }
 
     ExtractArithmetic extractArithmetic = ExtractArithmetic();
@@ -79,11 +84,11 @@ class TermWise {
       /* Regex to extract coefficient and variable part */
       RegExp regex = RegExp(
           r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
-
       Match match;
       String key;
       String coefficient;
       dynamic newTerm = removeBetween(term);
+      debugPrint("newTerm: $newTerm");
       if (newTerm == false) {
         // No brackets remove
         match = regex.firstMatch(term) as Match;
@@ -102,8 +107,11 @@ class TermWise {
         key = key.replaceAll(RegExp(r'[()]'),
             ''); // Remove only if it's NOT enclosing an expression
       }
+
+      // I don't know why there's a $key here. It doesn't work if you
+      // remove it apparently :( .
       groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
-        }
+    }
 
     debugPrint("groupedTerms: $groupedTerms");
     return groupedTerms;
