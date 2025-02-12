@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Substituition {
   Map<String, List<String>> substitued(Map<String, List<String>> mapTermWise) {
     bool purelyNumerical(String eqn) {

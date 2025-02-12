@@ -1,7 +1,6 @@
 import 'package:electro_magnetism_solver/utils/handlers/expansion/expansion.dart';
 import 'package:electro_magnetism_solver/utils/helpers/substituition/substituition.dart';
 import 'package:electro_magnetism_solver/utils/helpers/term_wise/term_wise.dart';
-import 'package:flutter/material.dart';
 
 class SimplifyHandler {
   dynamic simplifyHandler(String chgFlux) {

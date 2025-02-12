@@ -22,29 +22,42 @@ class TermWise {
 
   dynamic removeBetween(String input) {
     /*
-    Remove inbetween bracket to prevent 3t(3t)
-    from being read as 3t(3t) rather just read as
-    3t
+    In this function, we need to be able to do 
+    a few things. Identify whether or not the 
+    input brackets, if yes, are trigo present,
+    and if yes again, then are there multipliers
+    (i.e. 5(sin(t)))
     */
-    if (!input.contains('(') || !input.contains(')')) {
-      return false; // Return unchanged if the delimiters are missing
-    }
-
-    if (input.contains('sin') || input.contains('cos')) {
-      String tempInput = input.replaceAllMapped(RegExp(r'(sin|cos)\([^()]*\)'), (match) => '');
-      if (!tempInput.contains('(')) {
-        // 5sin(t) or 5cos(t) -> '5'
-        return false;
+    if (!input.contains('sin') && !input.contains('cos')) {
+      if (input.contains('(') && input.contains(')')) {
+        String pattern = RegExp.escape('(') +
+            r'[^' +
+            RegExp.escape(')') +
+            r']*' +
+            RegExp.escape(')');
+        return input.replaceAll(RegExp(pattern), '');
       }
+      return false;
     }
 
-    //TODO: CHANGE THIS TO SUIT 3t(3t) and 5t(5sin(t))
-    String pattern = RegExp.escape('(') +
-        r'[^' +
-        RegExp.escape(')') +
-        r']*' +
-        RegExp.escape(')');
-    return input.replaceAll(RegExp(pattern), '');
+    /*
+    Contains trigo
+    I've tried a number of regex(s) to sort whether
+    there exists a bracket outside the sin or cos but
+    to no avail. So we'll simply use a work-around, by
+    completely removing everything in between sin(...)
+    and cos(...) (i.e. 5t(5cos(t)) -> 5t(5) ).
+    
+    This works because we only need to check whether
+    there are any existing brackets left
+    */
+    String tempInput =
+        input.replaceAllMapped(RegExp(r'(sin|cos)\([^()]*\)'), (match) => '');
+    if (tempInput.contains('(') || tempInput.contains(')')) {
+      // Contains extra brackets, so we remove everything again.
+      return tempInput.replaceAllMapped(RegExp(r'\([^()]*\)'), (match) => '');
+    }
+    return false;
   }
 
   dynamic termWise(String? wholeEquation) {
@@ -86,19 +99,16 @@ class TermWise {
           r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
       Match match;
       String key;
-      String coefficient;
       dynamic newTerm = removeBetween(term);
       debugPrint("newTerm: $newTerm");
       if (newTerm == false) {
         // No brackets remove
         match = regex.firstMatch(term) as Match;
         key = match.group(2)!;
-        coefficient = match.group(1)!.isEmpty ? "1" : match.group(1)!;
       } else {
         // Brackets remove
         match = regex.firstMatch(newTerm) as Match;
         key = match.group(2)!;
-        coefficient = term;
       }
 
       /* Ensure parentheses are preserved when part of an expression */
@@ -110,7 +120,7 @@ class TermWise {
 
       // I don't know why there's a $key here. It doesn't work if you
       // remove it apparently :( .
-      groupedTerms.putIfAbsent(key, () => []).add('$coefficient$key');
+      groupedTerms.putIfAbsent(key, () => []).add(term);
     }
 
     debugPrint("groupedTerms: $groupedTerms");

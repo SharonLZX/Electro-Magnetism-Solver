@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class AddCoefficientOne {
   bool purelyNumerical(String eqn) {
     return RegExp(r'^\d+$').hasMatch(eqn);

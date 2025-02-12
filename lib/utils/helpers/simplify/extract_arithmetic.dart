@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ExtractArithmetic {
   List<String?> extractArithmetic(String func) {
     // Splits function at points where there are brackets, + or -.

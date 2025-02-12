@@ -2,7 +2,6 @@ import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/utils/helpers/differentiation/strat_one.dart';
 import 'package:electro_magnetism_solver/utils/helpers/differentiation/strat_two.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/split_function.dart';
-import 'package:flutter/material.dart';
 
 class Differentiation {
   List<String?> differentiate(String wholeFunction) {
