@@ -60,12 +60,16 @@ class Calculate {
 
   dynamic inducedEMFLoop(String chgFlux) {
     // Induced EMF in a loop is given by E = -dΦB/dt
-    SimplifyHandler simplifyHandler = SimplifyHandler();
-    String postSubstitution = simplifyHandler.simplifyHandler(chgFlux);
-
-    Differentiation differentiateHandler = Differentiation();
-    List<String?> result = differentiateHandler.differentiate(postSubstitution);
-    return result.join('+');
+    try{
+      SimplifyHandler simplifyHandler = SimplifyHandler();
+      String postSubstitution = simplifyHandler.simplifyHandler(chgFlux);
+      Differentiation differentiateHandler = Differentiation();
+      List<String?> result = differentiateHandler.differentiate(postSubstitution);
+      return result.join('+');
+    }
+    catch (Exception) {
+      return "Can't compute";
+    }
     /*Expansion expansion = Expansion();
     String strResult = result.join('');
     return expansion.combineLikeTerms(strResult);*/

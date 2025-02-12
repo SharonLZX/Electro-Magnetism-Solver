@@ -1,4 +1,5 @@
 import 'package:electro_magnetism_solver/utils/handlers/multiplication/implicit_exponent.dart';
+import 'package:flutter/material.dart';
 
 class ExtractParents {
   String extractParents(String? multiplier, String argument) {
@@ -29,7 +30,11 @@ class ExtractParents {
   */
     ImplicitExponent implicitExponent = ImplicitExponent();
     for (String args in lstArguments) {
-      lstResult.add(implicitExponent.implicitExponent(multiplier, args));
+      String? result = implicitExponent.implicitExponent(multiplier, args);
+        if (result == null){
+          lstResult.add(args); //Trigo identified.
+        }
+      lstResult.add(result);
     }
     /*
   Only work for argument that contain the same arithmetic,
@@ -37,9 +42,12 @@ class ExtractParents {
   won't work, because we're assuming with.join('+')/.join('-')
   that all the symbols are of the same kind.
   */
+  debugPrint("lstResult: $lstResult");
     if (argument.contains('+')) {
       return lstResult.join('+');
+    }else if (argument.contains('-')){
+      return lstResult.join('-');
     }
-    return lstResult.join('-');
+    return lstResult.join('');
   }
 }

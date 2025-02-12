@@ -3,6 +3,7 @@ import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_one
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_zero.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_parents.dart';
+import 'package:flutter/material.dart';
 
 class Expansion {
   String expansion(String function) {
@@ -13,7 +14,6 @@ class Expansion {
     List<String?> lstConst = [];
     List<String?> lstResult = [];
     List<String?> lstExtArith = [];
-
     bool expandPosiOne = false;
     lstExtArith = extractArithmetic.extractArithmetic(function);
     for (int i = 0; i < lstExtArith.length; i++) {
@@ -173,11 +173,12 @@ class Expansion {
         lstFunction[i] = updatedFunc;
       }
     }
-    
+
     // Add them into a dictionary, those with same exponent will go together
     Map<int, List<int>> groupedTerms = {};
     for (String? term in lstFunction) {
       if (term != null && term.isNotEmpty) {
+        debugPrint("$lstFunction");
         List<String> parts = term.split("t^");
         int coefficient = int.parse(parts[0]);
         int exponent = int.parse(parts[1]);
