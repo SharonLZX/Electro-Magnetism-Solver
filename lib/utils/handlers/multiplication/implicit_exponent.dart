@@ -3,7 +3,6 @@ import 'package:electro_magnetism_solver/utils/helpers/implicit/add_coefficient_
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_one.dart';
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_zero.dart';
 import 'package:electro_magnetism_solver/utils/helpers/trigo/contain_trigo.dart';
-import 'package:flutter/material.dart';
 
 class ImplicitExponent {
   String? implicitExponent(String? multiplier, String argument) {

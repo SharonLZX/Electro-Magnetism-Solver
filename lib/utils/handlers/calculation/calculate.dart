@@ -1,5 +1,6 @@
 import 'package:electro_magnetism_solver/utils/handlers/differentiation/differentiation.dart';
 import 'package:electro_magnetism_solver/utils/handlers/simplify/simplify.dart';
+import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/calculations/integration.dart';
@@ -63,9 +64,11 @@ class Calculate {
     try{
       SimplifyHandler simplifyHandler = SimplifyHandler();
       String postSubstitution = simplifyHandler.simplifyHandler(chgFlux);
-      Differentiation differentiateHandler = Differentiation();
+      return postSubstitution;
+      
+      /*Differentiation differentiateHandler = Differentiation();
       List<String?> result = differentiateHandler.differentiate(postSubstitution);
-      return result.join('+');
+      return result.join('+');*/
     }
     catch (Exception) {
       return "Can't compute";
