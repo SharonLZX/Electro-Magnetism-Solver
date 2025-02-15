@@ -1,3 +1,4 @@
+import 'package:electro_magnetism_solver/core/constants/constants.dart';
 import 'package:electro_magnetism_solver/utils/handlers/simplify/simplify.dart';
 import 'package:electro_magnetism_solver/utils/helpers/simplify/extract_arithmetic.dart';
 import 'package:flutter/material.dart';
@@ -61,31 +62,22 @@ class TermWise {
   }
 
   dynamic termWise(String? wholeEquation) {
-    Map<String, List<String>> groupedTerms = {};
-
-    /* If empty equation */
     if (wholeEquation == null || wholeEquation.isEmpty) {
-      return {};
+      return {}; // Ignore empty numbers
     }
 
-    ExtractArithmetic extractArithmetic = ExtractArithmetic();
-    //List<String> lstSplit = extractArithmetic.extractArithmetic2(wholeEquation);
-
-    RegExp regExp = RegExp(r'(?=[+\-](?![^\(\)]*\)))');
-    List<String> lstSplit = wholeEquation.split(regExp);
+    Map<String, List<String>> groupedTerms = {};
+    List<String> lstSplit = wholeEquation.split(splitArithmetics);
     for (String term in lstSplit) {
       term = term.trim();
-
-      /* Skip empty terms */
-      if (term.isEmpty) continue;
-
-      /* If purely numerical, no need to process further */
+      if (term.isEmpty) continue; // Skip empty terms
       if (purelyNumerical(term)) {
-        groupedTerms.putIfAbsent(term, () => []).add(term);
+        groupedTerms.putIfAbsent(term, () => []).add(term); // Skip numbers
         continue;
       }
 
-      /* Handle inner grouped terms first */
+      // Handle inner grouped terms first
+      ExtractArithmetic extractArithmetic = ExtractArithmetic();
       String? innerTerms = extractArithmetic.extractGroupedTerm(term);
       if (innerTerms != null && innerTerms != 't') {
         SimplifyHandler simplifyHandler = SimplifyHandler();
@@ -93,37 +85,26 @@ class TermWise {
         term = term.replaceAll(innerTerms, simplifiedTerm);
       }
 
-      //Expandable expandable = Expandable();
-      /* Regex to extract coefficient and variable part */
-      RegExp regex = RegExp(
-          r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
+      // Regex to extract coefficient and variable part
       Match match;
-      String key;
+      RegExp regex = extractCoeffVariable;
       dynamic newTerm = removeBetween(term);
-      debugPrint("newTerm: $newTerm");
       if (newTerm == false) {
-        // No brackets remove
-        match = regex.firstMatch(term) as Match;
-        key = match.group(2)!;
+        match = regex.firstMatch(term) as Match; // If brackets not removed
       } else {
-        // Brackets remove
-        match = regex.firstMatch(newTerm) as Match;
-        key = match.group(2)!;
+        match = regex.firstMatch(newTerm) as Match; // If brackets were removed
       }
+      String key = match.group(2)!;
 
-      /* Ensure parentheses are preserved when part of an expression */
+      // Ensure parentheses are preserved when part of an expression
       if (!RegExp(r'^(sin|cos|ln)\(.*\)$').hasMatch(key) &&
           !key.contains('(')) {
         key = key.replaceAll(RegExp(r'[()]'),
             ''); // Remove only if it's NOT enclosing an expression
       }
-
-      // I don't know why there's a $key here. It doesn't work if you
-      // remove it apparently :( .
       groupedTerms.putIfAbsent(key, () => []).add(term);
     }
 
-    debugPrint("groupedTerms: $groupedTerms");
     return groupedTerms;
   }
 }

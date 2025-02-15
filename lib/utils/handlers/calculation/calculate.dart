@@ -57,24 +57,21 @@ class Calculate {
     return false;
   }
 
-  
-
   dynamic inducedEMFLoop(String chgFlux) {
-    // Induced EMF in a loop is given by E = -dΦB/dt
-    try{
+    try {
       SimplifyHandler simplifyHandler = SimplifyHandler();
       String postSubstitution = simplifyHandler.simplifyHandler(chgFlux);
-      return postSubstitution;
-      
-      /*Differentiation differentiateHandler = Differentiation();
-      List<String?> result = differentiateHandler.differentiate(postSubstitution);
-      return result.join('+');*/
-    }
-    catch (Exception) {
+
+      Differentiation differentiateHandler = Differentiation();
+      List<String?> result =
+          differentiateHandler.differentiate(postSubstitution);
+      return result.join('+');
+    } catch (e) {
       return "Can't compute";
     }
-    /*Expansion expansion = Expansion();
-    String strResult = result.join('');
-    return expansion.combineLikeTerms(strResult);*/
   }
 }
+
+/*Expansion expansion = Expansion();
+    String strResult = result.join('');
+    return expansion.combi›eLikeTerms(strResult);*/

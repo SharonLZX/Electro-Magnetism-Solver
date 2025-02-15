@@ -15,7 +15,11 @@ final List<RegExp> regexList = [
 
 final RegExp coefficientRegEx = RegExp(r'([-+]?\d+)\s*([a-zA-Z]+\(x\)|x)');
 final RegExp hasParentheses = RegExp(r'\(.*?\)');
-final RegExp isTrigFunction = RegExp(r'\b(sin|cos)\s*\(.*?\)'); 
+final RegExp isTrigFunction = RegExp(r'\b(sin|cos)\s*\(.*?\)');
+final RegExp splitArithmetics = RegExp(r'(?=[+\-](?![^\(\)]*\)))');
+final RegExp extractCoeffVariable = RegExp(
+    r'^([+\-]?\d*\.?\d*)([a-zA-Z](?:[a-zA-Z]|\([^\(\)]+\))*(?:\^\d+)?)$');
+
 final List<String> superscriptDigits = [
   '⁰',
   '¹',
