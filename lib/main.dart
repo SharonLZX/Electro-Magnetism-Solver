@@ -5,7 +5,6 @@ import 'package:window_size/window_size.dart';
 import 'package:electro_magnetism_solver/app.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:electro_magnetism_solver/data/local/database_helper.dart';
 
 void setupWindow(){
@@ -17,7 +16,7 @@ void setupWindow(){
 }
 
 // Create a new instance of the database handler.
-DBHandler dbhandler = DBHandler();
+//DBHandler dbhandler = DBHandler();
 
 Future<void> main() async{
 
@@ -28,12 +27,12 @@ Future<void> main() async{
   setupWindow(); 
 
   // Open the database.
-  dbhandler.openDB(); 
+  //dbhandler.openDB(); 
 
   // Ensure that the screen size is set.
   await ScreenUtil.ensureScreenSize(); 
 
   // Set the WebView platform to Android.
-  WebViewPlatform.instance = AndroidWebViewPlatform(); 
+  //WebViewPlatform.instance = AndroidWebViewPlatform(); 
   runApp(const MyApp());  
 }

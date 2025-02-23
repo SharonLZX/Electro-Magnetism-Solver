@@ -65,14 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   equations:
     dependency: "direct main"
     description:
@@ -126,14 +118,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_echarts:
-    dependency: "direct main"
-    description:
-      name: flutter_echarts
-      sha256: "1102f0f82d3ca6025cf700d345ecc8c15c8bab38f5315dd2dcb67ecdb3fe3d91"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.0"
   flutter_lints:
     dependency: "direct dev"
     description:

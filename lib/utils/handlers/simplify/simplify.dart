@@ -5,24 +5,19 @@ import 'package:flutter/material.dart';
 
 class SimplifyHandler {
   dynamic simplifyHandler(String chgFlux) {
+    debugPrint("chgFlux: $chgFlux");
+
     TermWise termWise = TermWise();
     Map<String, List<String>> mapTermWise = termWise.termWise(chgFlux);
+    debugPrint("mapTermWise: $mapTermWise");
 
     Substituition substituition = Substituition();
     Map<String, List<String>> cleanMap = substituition.substitued(mapTermWise);
+    debugPrint("cleanMap: $cleanMap");
 
     List<String> lstSubstitute = [];
     Expansion expansion = Expansion();
     cleanMap.forEach((key, valueList) {
-      /*
-      Since now all our values are t, see substitued line 26-28.
-      we can run the valueList through our simplify.
-
-      But simplifiying, we may have new like terms. So let's 
-      combine them together.
-
-      Lastly, replace all the 't' with the 'key'
-      */
       String newFunction = valueList.join("+");
       debugPrint("newFunction: $newFunction");
 
@@ -30,8 +25,12 @@ class SimplifyHandler {
       debugPrint("result: $result");
 
       result = expansion.combineLikeTerms(result);
+      debugPrint("result: $result");
+      
       lstSubstitute.add(result.replaceAll('t', key));
+      debugPrint("lstSubstitute: $lstSubstitute");
     });
+    debugPrint("lstSubstitute.join('+'): ${lstSubstitute.join('+')}");
     return lstSubstitute.join('+');
   }
 }
