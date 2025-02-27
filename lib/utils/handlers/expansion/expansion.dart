@@ -10,11 +10,12 @@ class Expansion {
     ExtractParents extractParents = ExtractParents();
     ExtractArithmetic extractArithmetic = ExtractArithmetic();
 
+    bool expandPosiOne = false;
     List<int> lstIndex = [];
     List<String?> lstConst = [];
     List<String?> lstResult = [];
     List<String?> lstExtArith = [];
-    bool expandPosiOne = false;
+    
     lstExtArith = extractArithmetic.extractArithmetic(function);
     for (int i = 0; i < lstExtArith.length; i++) {
       String? function = lstExtArith[i];

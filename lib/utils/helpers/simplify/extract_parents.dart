@@ -42,7 +42,7 @@ class ExtractParents {
   won't work, because we're assuming with.join('+')/.join('-')
   that all the symbols are of the same kind.
   */
-  debugPrint("lstResult: $lstResult");
+
     if (argument.contains('+')) {
       return lstResult.join('+');
     }else if (argument.contains('-')){
