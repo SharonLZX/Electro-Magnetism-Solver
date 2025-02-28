@@ -53,7 +53,7 @@ class TermWise {
     String pattern = '';
     String tempInput = '';
 
-    if (!input.contains('sin') && !input.contains('cos')) {
+    if (!input.contains('sin') && !input.contains('cos')) { 
       // Doesn't contain trigometric functions, therefore either a constant, variable or expressions
       // with multipliers.
       if (input.contains('(') && input.contains(')')) {
