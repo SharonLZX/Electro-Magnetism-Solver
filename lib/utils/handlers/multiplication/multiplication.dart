@@ -2,18 +2,27 @@ class Expansion {
   String? expansion(List<String?> lstMultiplierArgument) {
     /*
     Multiply the coefficients, and add the exponents.
+
+    Parameters:
+      @params lstMultiplierArgument: The list of arguments to be multiplied.
+      @type lstMultiplierArgument: List<String>
+
+    Return:
+      @return String: The multiplied expression.
     */
+
+    // Initialising the variables.
     List<String> lstCoeffExponMultArg = [];
     RegExp regExp = RegExp(r'^(-?\d*)(t\^)(-?\d+)$');
+
     for (var func in lstMultiplierArgument) {
       if (func == null) {
         throw ArgumentError('Argument cannot be null');
       }
+
       Match? match = regExp.firstMatch(func);
       if (match != null) {
-        /*
-        Example: [5t^0, 1t^1] will show, [5, 0, 1, 1]
-        */
+        // Example: [5t^0, 1t^1] will show, [5, 0, 1, 1]
         var matched = match.group(1);
         if (matched != null) {
           lstCoeffExponMultArg.add(matched);
@@ -26,10 +35,7 @@ class Expansion {
       }
     }
 
-    /*
-    Simply algebra here 
-    (5t^0) * (1t^1) = (5*1)t^(0+1)
-    */
+    // Simply algebra here: (5t^0) * (1t^1) = (5*1)t^(0+1)
     
     int coeffMultiplier = int.parse(lstCoeffExponMultArg[0]);
     int exponMultiplier = int.parse(lstCoeffExponMultArg[1]);

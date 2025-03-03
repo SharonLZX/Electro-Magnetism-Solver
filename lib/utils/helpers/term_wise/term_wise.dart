@@ -32,14 +32,11 @@ class TermWise {
 
   dynamic prepareRegEx(String input) {
     /*
-    Attemps to remove certain bracketed expressions while considering trigonometric functions
-    with brackets. These regex expressions are here because I need to create a work-around
-    to remove the brackets in the equation. The reason for this is because of the result that
-    we are trying to achieve, with regards to how we determine what are like terms, taking into
-    account exotic expressions e.g. 5t(5sin(t)), etc.
-
-    Example: 
-
+    The idea behind this method is rather annoying. So use this
+    examples to understand the problem and how we navigate it.
+    Remember, we are trying to identify the like-terms. For 
+    expressions with brackets, we need to identify the multiplier
+    only - (i.e. 5t(...), etc.) - we only care about 5t.
 
     Parameters:
       @params input: The equation to be checked for brackets.
@@ -48,6 +45,22 @@ class TermWise {
     Result:
       @return: The equation with the brackets removed or false if no brackets are found.
       @type Union[String, False]
+
+    Example:
+      -> Contain sin/cos?
+        -> No
+          -> Contain brackets?
+            -> No
+              -> Return False - RegEx performed on original expression.
+            -> Yes
+              -> Replace (...) with '' - RegEx performed on new expression.
+        -> Yes
+          -> Remove everything with sin/cos - i.e. 5t(5sin(6t)) -> 5t(5)
+            -> Still contains brackets?
+              -> No
+                -> Return False - RegEx performed on original expression.
+              -> Yes
+                -> Replace (...) with '' - RegEx performed on new expression.
     */
 
     String pattern = '';
@@ -148,6 +161,17 @@ class TermWise {
       a proper 'regex.firstMatch' on the proper term. Since Regex is a bit tricky
       to work with, we need to ensure that we are able to clean and tweak the term
       such that we can get the proper match. 
+
+      So, essentially we use the method 'prepareRegEx' which returns either false,
+      or a term which we can use to perform the Regex on. 
+      
+      If false is returned, it means that we can perform the regex as per usual.
+      If a term is returned, it means that we need to perform the regex on the new
+      term which is necessary to get the proper match - Example, 5t(5sin(6t)) which
+      we want {5t, :[5t(5sin(6t))]}, because 5t is the multiplier which we really
+      care about - we can't simply perform the regex on the original term, so 
+      we will pass this expression through 'prepareRegEx' and get a new term (5t)
+      , which we can perform the regex.
       */
       newTerm = prepareRegEx(term);
 

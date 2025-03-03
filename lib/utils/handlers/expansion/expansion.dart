@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 
 class Expansion {
   String expansion(String function) {
+    /*
+
+    */
     ExtractParents extractParents = ExtractParents();
     ExtractArithmetic extractArithmetic = ExtractArithmetic();
 
@@ -16,24 +19,24 @@ class Expansion {
     List<String?> lstResult = [];
     List<String?> lstExtArith = [];
     
+    // Split expression into terms, i.e. 5t(sin(5t)) -> [5t, (sin(5t))]
     lstExtArith = extractArithmetic.extractArithmetic(function);
     for (int i = 0; i < lstExtArith.length; i++) {
       String? function = lstExtArith[i];
+
+      // Earlier return if function is null
       if (function == null) {
         break;
       }
+
+      // Check if current iteration contains a opening bracket.
       if (function.contains('(')) {
+        // Check if this opening bracket is at the first index.
         if (i == 1) {
           expandPosiOne = true;
         }
-        /*
-        Since we're using i-1, if equation has a case of
-        the (argument)multiplier, the code will fail (e.g 
-        (5t)3, etc.).
-        */
-
-        lstResult
-            .add(extractParents.extractParents(lstExtArith[i - 1], function));
+        // PROBLEM: i-1, will cause an error if i is 0.
+        lstResult.add(extractParents.extractParents(lstExtArith[i - 1], function)); 
       } else {
         /*
         Constants, arithmetics, and single variables (i.e. t)
@@ -145,11 +148,21 @@ class Expansion {
     /*
     Essentially we will combine all the values with same exponent together.
     We will use the help of a dictionary.
+
+    Parameters:
+      @params function: The expanded function.
+      @type function: String
+    
+    Return:
+      @return formattedTerms: The combined like terms.
+      @type formattedTerms: String
     */
 
-    // Splits where there is an arithmetic
+    // Initialising the variables.
     bool boolContainAdd = false;
     List<String> lstFunction = [];
+
+    // Splits where there is an arithmetic
     if (function.contains('+')) {
       boolContainAdd = true;
       lstFunction = function.split('+');

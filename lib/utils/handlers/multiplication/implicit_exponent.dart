@@ -24,33 +24,42 @@ class ImplicitExponent {
     All equations will include a variable, either to the power
     of zero or 1, as well as a coefficient of 1 is required.
     */
+    
+    // Creating the instance of the class.
     ContainTrigo containTrigo = ContainTrigo();
+    Expansion expansion = Expansion();
+    AddCoefficientOne addCoefficientOne = AddCoefficientOne();
+    AddExponentOne addExponentOne = AddExponentOne();
+    AddExponentZero addExponentZero = AddExponentZero();
+
+    // Initialising the variables.
+    List<String?> lstMultiplierArgument = [];
+
+    // Check if multiplier is null, if so, return null.
     if (multiplier == null){
       return null;
     }
+
+    // Check if multiplier or argument contain trigo, if so, return null.
     if (containTrigo.containTrigo(multiplier) || containTrigo.containTrigo(argument)){
       return null;
     }
 
-    List<String?> lstMultiplierArgument = [];
+    // Add multiplier and argument to the list.
     lstMultiplierArgument.add(multiplier);
     lstMultiplierArgument.add(argument);
-    AddCoefficientOne addCoefficientOne = AddCoefficientOne();
-    AddExponentOne addExponentOne = AddExponentOne();
-    AddExponentZero addExponentZero = AddExponentZero();
+
+    // Iterate over the list and change the multiplier and argument.
     for (int i = 0; i < 2; i++) {
-      /*
-      Take every variable and go for a sanity-check, before
-      updating the list. 
-      */
       var updatedEqn =
           addCoefficientOne.addCoefficientOne(lstMultiplierArgument[i]);
       updatedEqn = addExponentOne.addExponentOne(updatedEqn);
       updatedEqn = addExponentZero.addExponentZero(updatedEqn);
+
       lstMultiplierArgument[i] = updatedEqn;
     }
 
-    Expansion expansion = Expansion();
+    // Return expression of the multiplier performing an expansion over the argument
     return expansion.expansion(lstMultiplierArgument);
   }
 }
