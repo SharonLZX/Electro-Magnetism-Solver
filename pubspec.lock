@@ -292,10 +292,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_android
-      sha256: "4adf4fd5423ec60a29506c76581bc05854c55e3a0b72d35bb28d661c9686edf2"
+      sha256: "0ca7359dad67fd7063cb2892ab0c0737b2daafd807cf1acecd62374c8fae6c12"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.15"
+    version: "2.2.16"
   path_provider_foundation:
     dependency: transitive
     description:
@@ -380,18 +380,18 @@ packages:
     dependency: transitive
     description:
       name: simple_3d
-      sha256: "6e13eeb7c4dc4b3faf19e5e07bf79269e59d9a8cf496a6f202d0afd0aa05d471"
+      sha256: b9c81ecdc73b49c866cce92bedfbac085d71b082ff0b9abde17fd6cc8a3d7ffa
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.0"
+    version: "16.0.0"
   simple_3d_renderer:
     dependency: "direct main"
     description:
       name: simple_3d_renderer
-      sha256: "149e989b27bc78f880ba450d672a9952785046caa4f998671904ac39122a47fa"
+      sha256: "616526557a6b4ff13d397b84e1f1ec334d26bce40e21f57ad9234fd296f99ee4"
       url: "https://pub.dev"
     source: hosted
-    version: "21.0.0"
+    version: "22.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -553,10 +553,10 @@ packages:
     dependency: "direct main"
     description:
       name: util_simple_3d
-      sha256: "7f25a0554f3a6da7a52cde8d5c9f722b41e46b3f918b111eda8ce9b59f96f9a0"
+      sha256: ea6b739d5679d2abe981d1ed6e787133436ddaf33d50d4ebbb0147e8f30fed14
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.0"
+    version: "12.0.0"
   uuid:
     dependency: transitive
     description:
@@ -609,10 +609,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
+      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   webview_flutter:
     dependency: "direct main"
     description:
@@ -625,10 +625,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: "5568f17a9c25c0fdd0737900fa1c2d1fee2d780bc212d9aec10c2d1f48ef0f59"
+      sha256: "631093a7fbd93e9690ac61d8c8f3e857efbc189fc33f712b9ad6c01a623517ef"
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.1"
+    version: "4.3.3"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
@@ -641,10 +641,10 @@ packages:
     dependency: "direct main"
     description:
       name: webview_flutter_wkwebview
-      sha256: "8e0593559bfecd35eb1757d6907ed6b995a41ef82607d6113df897c2805ce6be"
+      sha256: c49a98510080378b1525132f407a92c3dcd3b7145bef04fb8137724aadcf1cf0
       url: "https://pub.dev"
     source: hosted
-    version: "3.18.0"
+    version: "3.18.4"
   win32:
     dependency: transitive
     description:
