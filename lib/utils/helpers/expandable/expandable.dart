@@ -7,7 +7,7 @@ class Simplification {
     List<int> indexLst = []; //Store the index of all naughty boys
     List<String?> finalResLst = [];
 
-    bool fkingNaughty = false;
+    bool specialCase = false;
     int intCompare = 0;
 
     extArithLst = extArith(function);
@@ -20,7 +20,7 @@ class Simplification {
 
       if (func.contains('(')) {
         if (i == 1) {
-          fkingNaughty = true;
+          specialCase = true;
         }
 
         /* This list can help us to remove the arg from func later. Since we 
@@ -74,7 +74,7 @@ class Simplification {
      * and resLst which is post-expansion. Which has two different length.
      * So in order to counter that, we need to compare the indexes.
      * 
-     * ONLY FOR CERTAIN SPECIAL SCENARIO WHERE FKINGNAUGHTY IS true:
+     * ONLY FOR CERTAIN SPECIAL SCENARIO WHERE specialCase IS true:
      * 
      * PROBLEM 1: But in the scenario where the expansion is in the beginning
      * like 5(5+5t)+t+5(5+5t), the intCompare must start from a 1 rather than a 
@@ -90,7 +90,7 @@ class Simplification {
      * allowed as we've to look i-1, which is -1. Will die.
      */
 
-    if (fkingNaughty) {
+    if (specialCase) {
       for (var i = 0; i < indexLst.length; i++) {
         indexLst[i] -= 1;
       }
@@ -338,9 +338,7 @@ void main() {
 
   if (replaceLe) {}
 
-  List<String> lstQuestions = [
-    "5t(5t)"
-  ];
+  List<String> lstQuestions = ["5t(5t)"];
 
   Simplification sHandler = Simplification(); //CHANGE NAME TO EXPANSION
   for (var question in lstQuestions) {
