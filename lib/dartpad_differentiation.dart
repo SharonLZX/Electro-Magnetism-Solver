@@ -102,7 +102,7 @@ class Differentiate {
 
     String? dervSub = ""; //Contains the derivative AFTER substituition
     String result = ""; //Contains result to send back to handler2
-    
+
     String finalCoeff = "";
     var deriveThis; //We need this to rebuild the function later on
     var newVariable; //This will contain the newVariable, e.g. sin(5x) will be sin(x)
@@ -121,7 +121,7 @@ class Differentiate {
       var newEquation = equation.replaceFirst(deriveThis, 'x');
       equation = newEquation;
       coeffVarList = exponentHandler.containsExp(newEquation);
-      } else {
+    } else {
       //Check if contains exponent
       coeffVarList = exponentHandler.containsExp(equation);
     }
@@ -170,9 +170,7 @@ class Differentiate {
     if (variable.contains('sin')) {
       containTrigo = true;
       variable = diffRulesHandler.sinRule(); //Simply overwrite the variable.
-    }
-
-    if (variable.contains('cos')) {
+    } else if (variable.contains('cos')) {
       containTrigo = true;
       variable = diffRulesHandler.cosRule();
     }
@@ -217,8 +215,8 @@ class Differentiate {
             //<numbers> to get the new multiplied number.
 
             var dervSubLst = dervSub.split('');
-            for (var item in dervSubLst){
-              if (item == 'x'){
+            for (var item in dervSubLst) {
+              if (item == 'x') {
                 break;
               }
               finalCoeff = finalCoeff + item.toString();
@@ -367,8 +365,8 @@ class Simplification {
     }
     return result;
   }
-  
-  dynamic simplifyEnd(String result){
+
+  dynamic simplifyEnd(String result) {
     result = result.replaceFirst('+-', '-');
     return result;
   }
@@ -376,6 +374,8 @@ class Simplification {
 
 void main() {
   DiffHandler diffHandler = DiffHandler();
+
+  // Unable to perform product/quotient rule WITH chain rule
   List<String> lstEquations = [
     "5",
     "5x",
@@ -384,14 +384,14 @@ void main() {
     "5x^2",
     "5x^3",
     "cos(x)",
-    "5cos(x)", 
+    "5cos(x)",
     "5cos(x)^2",
     "5cos(x)^3",
     "5x^2+5cos(x)",
     "5x^3+5cos(x)^2",
     "5x^3*5cos(x)",
     "5x^3/5cos(x)",
-    "cos(2x)",
+    "sin(2x)",
     "cos(x^2)",
     "cos(x^3)",
     "cos(3x^2)",
