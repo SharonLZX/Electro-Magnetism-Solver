@@ -24,13 +24,14 @@ class Calculate {
   List<String> magFlxIntgSymb(B, bd, S, sd, areaElm) {
     List<String> result = ["Formula: Φm = ∫∫B·dS"];
     result.add('∫∫($B)($bd)·($areaElm)($sd)');
-    if (!dependent(B)) {
+
+    /*if (!dependent(B)) {
       result.add('∫($B∫d$plane_1)d$plane_2');
       result.add('∫($B·$plane_1)d$plane_2');
       result.add('$plane_1${B}∫d$plane_2');
       result.add('$plane_1${integrationHandler.integrationManager(B)}');
       return result;
-    }
+    }*/
 
     if (bd != sd) {
       result.add('0 (BD and SD are orthogonal)');
@@ -38,9 +39,19 @@ class Calculate {
     }
 
     result.add('∫∫$B$areaElm');
-    if (!xyzPlane.any(B.contains)) {
+    bool BIndependent = !xyzPlane.any((v) => B.contains(v));
+
+    if (BIndependent) {
       result.add('$B∫∫$areaElm');
+
+      // Replace ∫∫dxdy/dydz/etc with user-defined surface area S
+      result.add('$B·$S'); // visual step
+      result.add('${B}$S'); // simplified final step
       return result;
+
+      /*if (!xyzPlane.any(B.contains)) {
+      result.add('$B∫∫$areaElm');
+      return result;*/
     }
 
     B = integrationHandler.integrationManager(B);

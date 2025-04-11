@@ -115,6 +115,7 @@ class _CalculatePageState extends State<CalculatePage> {
 
     if (selectedFormula == formulaList[0]) {
       return (plane!.isNotEmpty &&
+          plane.length == 2 &&
           magField!.isNotEmpty &&
           surfArea!.isNotEmpty &&
           fieldDir!.isNotEmpty &&
@@ -207,11 +208,15 @@ class _CalculatePageState extends State<CalculatePage> {
                       if (isCntrlFilled()) {
                         snacker.showSuccess("Calculating...");
                         if (_result.isNotEmpty) {
-                          _result.clear();
+                          _result = [];
                         }
                         calculateResult();
                       } else {
                         snacker.showError("Ensure all fields are filled.");
+
+                        setState(() {
+                          _result = [];
+                        });
                       }
                     },
                   ),
