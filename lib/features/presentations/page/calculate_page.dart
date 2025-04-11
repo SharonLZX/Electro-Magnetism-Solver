@@ -237,7 +237,7 @@ class _CalculatePageState extends State<CalculatePage> {
                   child: ResultList(
                     result: _result,
                   )),
-              Text("Problems that can't do yet:"),
+              Text("Expression limitations :"),
               SizedBox(height: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

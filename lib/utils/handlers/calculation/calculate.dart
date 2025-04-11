@@ -27,7 +27,7 @@ class Calculate {
     if (!dependent(B)) {
       result.add('∫($B∫d$plane_1)d$plane_2');
       result.add('∫($B·$plane_1)d$plane_2');
-      result.add('$plane_1${B}d$plane_2');
+      result.add('$plane_1${B}∫d$plane_2');
       result.add('$plane_1${integrationHandler.integrationManager(B)}');
       return result;
     }

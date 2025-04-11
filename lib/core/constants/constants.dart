@@ -9,7 +9,7 @@ final List<String> formulaList = [
 final List<RegExp> regexList = [
   RegExp(r'^(x|y|z|xy|yx|xz|zx|yz|zy)$'),
   RegExp(r'^(a|ax|ay|az)$'),
-  RegExp(r'^[a-zA-Z0-9+\-*/()]*\^?\d*$'),
+  RegExp(r'^[a-zA-Z0-9+\-*/%=()^]+$'),
   RegExp(r'^[a-zA-Z0-9+\-*/%=()^]+$'),
 ];
 
