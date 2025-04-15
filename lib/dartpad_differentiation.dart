@@ -116,8 +116,8 @@ class Differentiate {
       dervSub = differentiate(deriveThis);
       requireSubst = true;
     }
-
     if (requireSubst) {
+      //Cause its true so it will run here
       var newEquation = equation.replaceFirst(deriveThis, 'x');
       equation = newEquation;
       coeffVarList = exponentHandler.containsExp(newEquation);
@@ -128,18 +128,19 @@ class Differentiate {
 
     if (coeffVarList != null) {
       containExpo = true;
-      coeffVar = coeffVarList[0];
+      coeffVar = coeffVarList[0]; // 2x^2 => ["2x", "2"]
       exponent = coeffVarList[1];
       coeffVarList =
-          coefficientHandler.extractCoefficient(coeffVar); //Reuse the list
+          coefficientHandler.extractCoefficient(coeffVar); // 2x => ["2", "x"]
     } else {
       //Pass equation rather than coeffVar here, since
       //'equation' will contain only the coefficient &
       //variable.
       coeffVarList = coefficientHandler.extractCoefficient(equation);
+      // return [coefficient, variable]
     }
 
-    //Check if contain coefficient
+    //Check if contain coefficient from return [coefficient, variable]
     if (coeffVarList != null) {
       containCoeff = true;
       coefficient = coeffVarList[0];
@@ -163,6 +164,7 @@ class Differentiate {
 
     if (containExpo) {
       List<int> expoLst = diffRulesHandler.powerRule(exponent);
+      //return [expo, expo - 1];
       exponent = expoLst[0].toString();
       der_expo = expoLst[1].toString();
     }
@@ -192,15 +194,19 @@ class Differentiate {
     }
 
     if (containCoeff == false && containExpo == false) {
+      // eg: sin(x^2)
       coefficient = "1";
       if (containTrigo) {
         if (requireSubst == true) {
+          //true since x^2 in sin, need subst
           return "$dervSub$variable";
+          // return 2x cos(x^2)
         }
 
         //Q-type: d/dx sin(x)
         return "$variable";
       }
+      //No coeff, No expo, No trigo si it will In
       return "1/x";
     }
 
@@ -352,7 +358,7 @@ class SubstituitionHandler {
         var newVariable = variable.replaceFirst(match.group(1).toString(), 'x');
         return [match.group(1), newVariable];
       }
-      return null; //Equation with brackets e.g. 5x or 5x^2
+      return null; //Equation without brackets e.g. 5x or 5x^2
     }
   }
 }

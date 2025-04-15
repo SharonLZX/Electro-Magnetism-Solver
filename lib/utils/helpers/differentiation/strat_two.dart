@@ -1,11 +1,13 @@
 import 'package:electro_magnetism_solver/utils/handlers/differentiation/differentiation.dart';
 import 'package:flutter/material.dart';
 
+// apply the product rule to expressions that contain brackets
+
 class StrategyTwo {
   String? strategyTwo(String indvFunc) {
     RegExp regex = RegExp(r'^([^()]+)?\(([^()]+)\)$');
     var match = regex.firstMatch(indvFunc);
-    if (match != null){
+    if (match != null) {
       String outside = match.group(1) ?? "";
       String inside = match.group(2)!;
 

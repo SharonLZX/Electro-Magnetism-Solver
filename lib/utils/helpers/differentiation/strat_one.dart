@@ -3,6 +3,8 @@ import 'package:electro_magnetism_solver/utils/helpers/implicit/add_coefficient_
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_one.dart';
 import 'package:electro_magnetism_solver/utils/helpers/implicit/add_exponent_zero.dart';
 
+// focuses on only expressions that do not contain any form of brackets
+// make into a standardized form
 class StrategyOne {
   String? strategyOne(String indvFunc) {
     AddCoefficientOne addCoefficientOne = AddCoefficientOne();
@@ -15,9 +17,9 @@ class StrategyOne {
 
     PowerRule powerRule = PowerRule();
     String? result = powerRule.powerRule(updInvFunc);
-    if (result != null){
+    if (result != null) {
       return result;
-    }else{
+    } else {
       return null;
     }
   }

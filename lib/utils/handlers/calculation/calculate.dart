@@ -60,13 +60,13 @@ class Calculate {
     return result;
   }
 
-  bool dependent(String B) {
+  /*bool dependent(String B) {
     if (['x', 'y', 'z']
         .any((axis) => B.contains(axis) && plane_1.contains(axis))) {
       return true;
     }
     return false;
-  }
+  }*/
 
   dynamic inducedEMFLoop(String chgFlux) {
     try {

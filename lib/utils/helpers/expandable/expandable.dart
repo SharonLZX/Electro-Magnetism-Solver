@@ -49,6 +49,7 @@ class Simplification {
          * naughtyLst cannot add multiplier so we use [i+1] to check if it is.
          * naughtyLst contains all the san-san one.
          * */
+
         if (i + 1 < extArithLst.length) {
           // Ensure index is in bounds
           if (extArithLst[i + 1]?.contains('(') == false) {
