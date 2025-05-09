@@ -60,10 +60,19 @@ class _CalculatePageState extends State<CalculatePage> {
       String surfArea = controllers['S']?.text ?? "0";
       String fieldDir = controllers['BD']?.text ?? "az";
       String surfDir = controllers['SD']?.text ?? "az";
-      // Wrap with overrightarrow LaTeX
-      String fieldVector = r'\overrightarrow{' + fieldDir + '}';
-      String surfVector = r'\overrightarrow{' + surfDir + '}';
+      // Convert ax → a_x using basic parsing logic
+      String formatToSubscript(String input) {
+        if (input.length == 2) {
+          return '${input[0]}_{${input[1]}}'; // e.g., a + z → a_{z}
+        }
+        return input;
+      }
 
+      String formattedFieldDir = formatToSubscript(fieldDir);
+      String formattedSurfDir = formatToSubscript(surfDir);
+
+      String latexField = r'\overrightarrow{' + formattedFieldDir + '}';
+      String latexSurf = r'\overrightarrow{' + formattedSurfDir + '}';
       if (surfArea == "1") {
         surfArea = "";
       }
@@ -73,7 +82,7 @@ class _CalculatePageState extends State<CalculatePage> {
 
       areaElm = calcHandler.planeFormatting(plane);
       result = calcHandler.magFlxIntgSymb(
-          magField, fieldVector, surfArea, surfVector, areaElm);
+          magField, latexField, surfArea, latexSurf, areaElm);
 
       _result = subscriptHandler.subscriptFormatting(result);
     } else if (selectedFormula == formulaList[1]) {
