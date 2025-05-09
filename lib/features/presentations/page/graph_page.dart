@@ -27,7 +27,7 @@ class _GraphPageState extends State<GraphPage> {
     PlaneObj planeObj = PlaneObj();
     objs = UtilSp3dCommonParts.coordinateArrows(300);
     for (int i = 0; i < 3; i++) {
-      objs.add(axisObj.createArrow(i));
+      //objs.add(axisObj.createArrow(i));
       objs.add(axisObj.createPillar(i));
       objs.add(planeObj.createPlanes(i));
     }
